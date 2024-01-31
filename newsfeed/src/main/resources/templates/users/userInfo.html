@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Info</title>
+</head>
+<body>
+
+<div id = "usreInfoContainer"></div>
+<script>
+    /*
+    // 서버에서 받아온 JSON 데이터 (예시)
+    var userInfoJson = '{"username": "john_doe", "isAdmin": true}';
+
+    // JSON 문자열을 JavaScript 객체로 파싱
+    var userInfo = JSON.parse(userInfoJson);
+
+    // HTML에 표시할 내용 생성
+    var htmlContent = '<h2>User Info</h2>' +
+        '<p><strong>Username:</strong> ' + userInfo.username + '</p>' +
+        '<p><strong>Is Admin:</strong> ' + (userInfo.isAdmin ? 'Yes' : 'No') + '</p>';
+
+    // HTML을 userInfoContainer 안에 삽입
+    document.getElementById('userInfoContainer').innerHTML = htmlContent;
+     */
+</script>
+
+    <h2>내 프로필</h2>
+    <p><strong>Username:</strong> <span th:text="${userInfo.username}"></span></p>
+    <p><strong>Is Admin:</strong> <span th:text="${userInfo.isAdmin} ? 'Yes' : 'No'"></span></p>
+</div>
+
+</body>
+</html>

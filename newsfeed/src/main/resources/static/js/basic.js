@@ -10,6 +10,7 @@ $(document).ready(function () {
         $('#login-true').show();
         $('#login-false').hide();
     }
+
 })
 
 function logout() {

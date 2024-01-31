@@ -9,7 +9,7 @@ body {
 .header {
     height: 255px;
     box-sizing: border-box;
-    background-color: #15aabf;
+    background-color: #F5953B;
     color: white;
     text-align: center;
     padding-top: 80px;
@@ -24,12 +24,6 @@ body {
 }
 
 #header-title-select-shop {
-    margin-top: 20px;
-    font-size: 45px;
-    letter-spacing: 1.1px;
-}
-
-#header-title-select-shop1 {
     margin-top: 20px;
     font-size: 45px;
     letter-spacing: 1.1px;
@@ -182,7 +176,7 @@ body {
     text-align: center;
     color: #ffffff;
 }
-
+/* 로그인, 로그아웃 버튼 */
 #login-text {
     position:absolute;
     top:48px;
@@ -198,11 +192,11 @@ body {
     text-align: center;
     color: #ffffff;
 }
-
+/* 프로필 보기 버튼 */
 #login-text1 {
     position:absolute;
     top:48px;
-    right:50px;
+    right:200px;
     font-size: 18px;
     font-family: SpoqaHanSansNeo;
     font-size: 18px;

@@ -27,6 +27,12 @@ public class User {
     @Column(nullable = false, unique = true)
     private String email;    // 이메일
 
+    @Column
+    private String description; // 한 줄 소개
+
+    @Lob
+    private byte[] profile_image;   // 프로필 이미지
+
     @Column(nullable = false)
     // @Enumerated: EnumType을 DB컬럼에 저장할 때 사용
     // EnumType.STRING 옵션 사용 시 Enum의 이름을 그대로 DB에 저장함
