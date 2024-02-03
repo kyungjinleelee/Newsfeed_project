@@ -3,30 +3,22 @@ package com.sparta.newsfeed.service;
 import com.sparta.newsfeed.dto.SignupRequestDto;
 import com.sparta.newsfeed.entity.User;
 import com.sparta.newsfeed.entity.UserRoleEnum;
-import com.sparta.newsfeed.jwt.JwtUtil;
 import com.sparta.newsfeed.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
 @Service
-// @RequiredArgsConstructor
+@RequiredArgsConstructor
 public class UserService {
-    // 주입 받아오기
+    // 주입 받아오기 (생성자는 @RequiredArgsConstructor로)
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
-    private final JwtUtil jwtUtil;  // Bean으로 등록해 둔 JWT 주입
 
-    // 생성자 만들기 (이 부분 대신 @RequiredArgsConstructor도 가능)
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtUtil jwtUtil) {
-        this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
-        this.jwtUtil = jwtUtil;
-    }
 
-    // 관리자 회원가입 인가 방법 : ADMIN_TOKEN (관리자 가입 토큰) 입력 필요
-    // 랜덤하게 생성된 토큰 사용
+    // 관리자 회원가입 인가 방법 : ADMIN_TOKEN (관리자 가입 토큰) 입력 필요, 랜덤하게 생성된 토큰 사용
     private final String ADMIN_TOKEN = "AAABnvxRVklrnYxKZ0aHgTBcXukeZygoC";
 
     // 회원 가입

@@ -15,9 +15,10 @@
 </head>
 <body>
 <div id="login-form">
-    <div id="login-title">Log into meow Time</div>
-    <br>
-    <br>
+    <div id="login-title">Log into Meow Time🐱</div>
+    <button id="login-kakao-btn" onclick="location.href='https://kauth.kakao.com/oauth/authorize?client_id=cb6b98d25576fc5a12382956dcca30b5&redirect_uri=http://localhost:8080/api/user/kakao/callback&response_type=code'">
+        카카오로 로그인하기
+    </button>
     <button id="login-id-btn" onclick="location.href='/api/user/signup'">
         회원 가입하기
     </button>
@@ -30,7 +31,7 @@
 
         <button id="login-id-submit" onclick="onLogin()">로그인</button>
     </div>
-    <div id="login-failed" style="display: none" class="alert alert-danger" role="alert">로그인에 실패하였습니다.</div>
+    <div id="login-failed" style="display:none" class="alert alert-danger" role="alert">로그인에 실패하였습니다.</div>
 </div>
 </body>
 <script>
@@ -39,14 +40,14 @@
         Cookies.remove('Authorization', {path: '/'});
     });
 
-    const host = 'http://' + window.location.host;
-
     const href = location.href;
-    const queryString = href.substring(href.indexOf("?")+1)
+    const queryString = href.substring(href.indexOf("?") + 1)
     if (queryString === 'error') {
         const errorDiv = document.getElementById('login-failed');
         errorDiv.style.display = 'block';
     }
+
+    const host = 'http://' + window.location.host;
 
     function onLogin() {
         let username = $('#username').val();
@@ -59,10 +60,18 @@
             data: JSON.stringify({username: username, password: password}),
         })
             .done(function (res, status, xhr) {
+                const token = xhr.getResponseHeader('Authorization');
+
+                Cookies.set('Authorization', token, {path: '/'})
+
+                $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                    jqXHR.setRequestHeader('Authorization', token);
+                });
+
                 window.location.href = host;
             })
-            .fail(function (xhr, textStatus, errorThrown) {
-                console.log('statusCode: ' + xhr.status);
+            .fail(function (jqXHR, textStatus) {
+                alert("Login Fail");
                 window.location.href = host + '/api/user/login-page?error'
             });
     }
