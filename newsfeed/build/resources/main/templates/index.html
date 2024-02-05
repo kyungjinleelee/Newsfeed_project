@@ -237,6 +237,36 @@
             text-align: center;
             color: #ffffff;
         }
+        /* ------------------------------ 댓글 영역 스타일 -------------------------------*/
+        .comments {
+            margin-top: 20px;
+        }
+
+        .comments h2 {
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .comment-field {
+            width: 100%;
+            height: 80px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            resize: none;
+        }
+
+        .comment-field::placeholder {
+            color: #868e96;
+        }
+
+        .comments img {
+            cursor: pointer;
+            width: 22px;
+            height: 22px;
+        }
     </style>
     <script>
         const host = 'http://' + window.location.host;
@@ -341,7 +371,7 @@
         }
 
         // 메모 하나를 HTML로 만들어서 body 태그 내 원하는 곳에 붙입니다.
-        function addHTML(id, username, contents, modifiedAt) {
+        function addHTML(id, username, contents, modifiedAt, comments) {
             // 1. HTML 태그를 만듭니다.
             let tempHtml = `<div class="card">
                 <!-- date/username 영역 -->
@@ -372,6 +402,9 @@
 
             // 2. #cards-box에 HTML을 붙인다.
             $('#cards-box').append(tempHtml);
+
+            // 댓글을 불러오고 추가하는 함수 호출
+            getComments(id, comments);
         }
 
         // 메모를 생성합니다.
@@ -454,6 +487,51 @@
             })
         }
 
+        // 댓글을 불러오고 추가하는 함수
+        function getComments(id, comments) {
+            let commentList = $(`#${id}-comments`);
+            commentList.empty();    // 기존 댓글 내용을 지움
+
+            // comments가 존재하면 각각의 댓글을 HTML로 추가
+            if (comments && comments.length > 0) {
+                for (let i = 0; i < comments.length; i++) {
+                    let comment = comments[i];
+                    commentList.append(`<div class="comment">${comment.user.username}: ${comment.contents}</div>`)
+                }
+            }
+        }
+
+        // 댓글을 작성하는 함수
+        function writeComment(id) {
+            let commentInput = $(`#${id}-comments`);
+            let commentContents = commentInput.val().trim();
+
+            if (commentContents == '') {
+                alert('댓글 내용을 입력해주세요.');
+                return;
+            }
+
+            // 전달할 데이터를 JSON 으로 만듦
+            let data = {'username' : 'anonymous', 'contents' : commentContents};
+
+            // POST /api/comment/{id} 에 데이터를 전달
+            $.ajax({
+                type: 'POST',
+                url: `/api/comment/${id}`,
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function (response) {
+                    alert('댓글이 성공적으로 작성되었다냥!');
+                    commentInput.val('');   // 댓글 입력창 다시 비우기
+                    // 댓글을 다시 불러와서 화면에 갱신
+                    getComments(id, response.comments);
+                },
+                error: function (error) {
+                    console.error('댓글 작성 중 오류:', error);
+                }
+            });
+        }
+
         //---------------------------------- 게시글 끝 -----------------------------------
         function logout() {
             // 토큰 삭제
@@ -505,6 +583,7 @@
         <img src="../static/images/send.png" alt="" onclick="writePost()">
     </div>
     <div id="cards-box" class="area-read">
+        <!-- 카드 영역 -->
         <div class="card">
             <!-- date/username 영역 -->
             <div class="metadata">
@@ -524,6 +603,13 @@
                 <img id="1-edit" class="icon-start-edit" src="../static/images/edit.png" alt="" onclick="editPost('1')">
                 <img id="1-delete" class="icon-delete" src="../static/images/delete.png" alt="" onclick="deleteOne('1')">
                 <img id="1-submit" class="icon-end-edit" src="../static/images/done.png" alt="" onclick="submitEdit('1')">
+            </div>
+            <!-- 댓글 영역 -->
+            <div class="comments">
+                <h2>댓글</h2>
+                <textarea id="${id}-comments" class="comment-field" placeholder="서로 존중하는 댓글을 입력해주세요."></textarea>
+                <img src="../static/images/send.png" alt="" onclick="writeComment(`${id}`)">
+            <!--    <button onclick="writeComment(`${id}`)">댓글 작성</button> -->
             </div>
         </div>
     </div>
