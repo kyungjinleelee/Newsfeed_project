@@ -16,6 +16,7 @@ public class UserService {
     // 주입 받아오기 (생성자는 @RequiredArgsConstructor로)
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+ //   private final JwtUtil jwtUtil;
 
 
     // 관리자 회원가입 인가 방법 : ADMIN_TOKEN (관리자 가입 토큰) 입력 필요, 랜덤하게 생성된 토큰 사용

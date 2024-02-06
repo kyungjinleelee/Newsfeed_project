@@ -28,9 +28,19 @@ public class Comment extends Timestamped {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    public Comment(CommentRequestDto requestDto, User user) {
+//    public Comment(CommentRequestDto requestDto, User user) {
+//        this.contents = requestDto.getContents();
+//        this.user = user;
+//    }
+
+    public Comment(CommentRequestDto requestDto, Board board, User user) {
         this.contents = requestDto.getContents();
+        this.board = board;
         this.user = user;
     }
 
+    public void update(CommentRequestDto requestDto, User user) {
+        this.contents = requestDto.getContents();
+        this.user = user;
+    }
 }

@@ -51,7 +51,7 @@ public class BoardService {
         // 해당 글이 DB에 있는지 확인
         Board board = findBoard(id);
 
-        // 선택한 게시글의 작성자와 토큰에서 가져온 사용자 정보가 일치하는지 확인 (수정하려는 유저가 관리자라면 댓글 수정 가능)
+        // 선택한 게시글의 작성자와 토큰에서 가져온 사용자 정보가 일치하는지 확인 (수정하려는 유저가 관리자라면 글 수정 가능)
         Optional<Board> found = boardRepository.findByIdAndUser(id, user);
         if (found.isEmpty() && user.getRole() == UserRoleEnum.USER) {
             throw new IllegalArgumentException("사용자가 올바르지 않습니다.");

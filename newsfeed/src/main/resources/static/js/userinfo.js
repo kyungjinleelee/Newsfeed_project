@@ -22,7 +22,7 @@ $(document).ready(function () {
             const isAdmin = !!res.admin;
 
             if (!username) {    // 사용자 명이 없으면 로그인 페이지로 리디렉션
-                window.location.href = '/api/user/login-page';
+                window.location.href = host + '/api/user/login-page';
                 return;
             }
 
@@ -108,19 +108,4 @@ function showUserinfo(isAdmin = false) {
             logout();
         }
     });
-}
-function logout() {
-    // 토큰 삭제
-    Cookies.remove('Authorization', {path: '/'});
-    window.location.href = host + '/api/user/login-page';
-}
-
-function getToken() {
-    let auth = Cookies.get('Authorization');
-
-    if (auth === undefined) {
-        return '';
-    }
-
-    return auth;
 }

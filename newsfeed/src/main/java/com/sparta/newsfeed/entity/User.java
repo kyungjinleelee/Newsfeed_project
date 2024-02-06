@@ -21,7 +21,7 @@ public class User {
     @Column(nullable = false)
     private String password; // 로그인용 패스워드
 
-    @Column(nullable = false)
+ //   @Column(nullable = false)
     private String name;     // 이름
 
     @Column(nullable = false, unique = true)

@@ -238,12 +238,12 @@
             color: #ffffff;
         }
         /* ------------------------------ 댓글 영역 스타일 -------------------------------*/
-        .comments {
-            margin-top: 20px;
+        .comments-area{
+            margin-top: 10px;
         }
 
         .comments h2 {
-            font-size: 18px;
+            font-size: 10px;
             font-weight: bold;
             margin-bottom: 10px;
         }
@@ -294,9 +294,14 @@
                     const isAdmin = !!res.admin;
 
                     if (!username) {    // 사용자 명이 없으면 로그인 페이지로 리디렉션
-                        window.location.href = '/api/user/login-page';
+                        window.location.href = host + '/api/user/login-page';
                         return;
                     }
+                    // '내 프로필' 링크 클릭 이벤트 처리
+                    $('#login-text1').on('click', function(event) {
+                        event.preventDefault(); // 링크의 기본 동작(페이지 이동)을 방지
+                        window.location.href = host + '/user-info'; // 사용자 프로필 페이지로 이동
+                    });
 
                     // $('#username').text(username);  // html에 사용자 정보 표시
                     // if (isAdmin) {
@@ -486,7 +491,7 @@
                 }
             })
         }
-
+        // ----------------------------------------- 댓글 시작 --------------------------------
         // 댓글을 불러오고 추가하는 함수
         function getComments(id, comments) {
             let commentList = $(`#${id}-comments`);
@@ -496,7 +501,7 @@
             if (comments && comments.length > 0) {
                 for (let i = 0; i < comments.length; i++) {
                     let comment = comments[i];
-                    commentList.append(`<div class="comment">${comment.user.username}: ${comment.contents}</div>`)
+                    commentList.append(`<div class="comments-area">${comment.user.username}: ${comment.contents}</div>`)
                 }
             }
         }
@@ -605,13 +610,17 @@
                 <img id="1-submit" class="icon-end-edit" src="../static/images/done.png" alt="" onclick="submitEdit('1')">
             </div>
             <!-- 댓글 영역 -->
-            <div class="comments">
+            <div class="comments-area">
                 <h2>댓글</h2>
-                <textarea id="${id}-comments" class="comment-field" placeholder="서로 존중하는 댓글을 입력해주세요."></textarea>
-                <img src="../static/images/send.png" alt="" onclick="writeComment(`${id}`)">
-            <!--    <button onclick="writeComment(`${id}`)">댓글 작성</button> -->
+                <textarea id="${id}-comments" class="comment-field" placeholder="서로 존중하는 댓글을 입력해주세요." cols="15" rows="10"></textarea>
+                <!-- 버튼 영역 -->
+                <div>
+                    <img src="../static/images/send_comment.png" alt="" onclick="writeComment(`${id}`)">
+                    <!--    <button onclick="writeComment(`${id}`)">댓글 작성</button> -->
+                </div>
             </div>
         </div>
+
     </div>
 </div>
 </body>

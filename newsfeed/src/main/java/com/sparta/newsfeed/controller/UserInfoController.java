@@ -22,31 +22,30 @@ public class UserInfoController {
     private final UserInfoService userInfoService;
     private final UserService userService;
 
-    // 회원 정보 불러옴
+    // 회원 정보 조회
     @GetMapping("/user-info")
     @ResponseBody   // JSON으로 반환
     public UserInfoDto getUserInfo(@AuthenticationPrincipal UserDetailsImpl userDetails) {  // @AuthenticationPrincipal: 현재 인증된 사용자의 정보를 가져옴
         log.info("회원 정보 불러오는 시도");
         String username = userDetails.getUser().getUsername();
-    //    String name = userDetails.getUser().getName();
-    //    String description = userDetails.getUser().getDescription();
-    //    String email = userDetails.getUser().getEmail();
+        String name = userDetails.getUser().getName();
+        String email = userDetails.getUser().getEmail();
         UserRoleEnum role = userDetails.getUser().getRole();
         boolean isAdmin = (role == UserRoleEnum.ADMIN);
-        return new UserInfoDto(username, isAdmin);
+        return new UserInfoDto(username, name, email, isAdmin);
     }
 
 //    @GetMapping("/user-info")
 //    public String getUserInfo(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 //        log.info("회원 정보 불러오는 시도");
 //        String username = userDetails.getUser().getUsername();
-////        String name = userDetails.getUser().getName();
-////        String email = userDetails.getUser().getEmail();
+//        String name = userDetails.getUser().getName();
+//        String email = userDetails.getUser().getEmail();
 //        UserRoleEnum role = userDetails.getUser().getRole();
 //        boolean isAdmin = (role == UserRoleEnum.ADMIN);
 //
-////        UserInfoDto userInfoDto = new UserInfoDto(username, name, email, isAdmin);
-//        UserInfoDto userInfoDto = new UserInfoDto(username, isAdmin);
+////        UserInfoDto user = UserInfoService.findUser(userDetails.getUsername());
+//        UserInfoDto userInfoDto = new UserInfoDto(username, name, email, isAdmin);
 //        model.addAttribute("userInfo", userInfoDto);
 //
 //        return "userInfo";

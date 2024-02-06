@@ -25,10 +25,7 @@ public class UserDetailsImpl implements UserDetails {   // security의 default �
         this.username = username;
 //      this.password = password;
     }
-
-    public User getUser() {
-        return user;
-    }       // 인증 완료된 User를 가져오는 Getter
+    public User getUser() { return user; }       // 인증 완료된 User를 가져오는 Getter
 
     @Override
     public String getPassword() {
