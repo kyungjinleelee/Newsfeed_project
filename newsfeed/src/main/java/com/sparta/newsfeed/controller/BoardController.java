@@ -1,5 +1,6 @@
 package com.sparta.newsfeed.controller;
 
+import com.sparta.newsfeed.dto.BoardDetailDto;
 import com.sparta.newsfeed.dto.BoardRequestDto;
 import com.sparta.newsfeed.dto.BoardResponseDto;
 import com.sparta.newsfeed.security.UserDetailsImpl;
@@ -22,7 +23,8 @@ public class BoardController {
 
     // 글 쓰기
     @PostMapping("/boards")
-    public BoardResponseDto createBoard(@RequestBody BoardRequestDto requestDto, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+    public BoardResponseDto createBoard(@RequestBody BoardRequestDto requestDto,
+                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return boardService.createBoard(requestDto, userDetails.getUser());
     }
 
@@ -36,6 +38,12 @@ public class BoardController {
     @DeleteMapping("/boards/{id}")
     public Long deleteBoard(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return boardService.deleteBoard(id, userDetails.getUser());
+    }
+
+    // 글 상세보기
+    @GetMapping("/boards/{id}")
+    public BoardDetailDto show(@PathVariable Long id){
+        return boardService.show(id);
     }
 
 }

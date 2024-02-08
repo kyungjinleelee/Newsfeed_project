@@ -125,6 +125,7 @@
             border-radius: 5px;
             background-color: #ffffff;
             margin-bottom: 12px;
+            position: relative;  /* 댓글 영역과 겹치지 않도록 */
         }
 
         .card .metadata {
@@ -205,7 +206,8 @@
         }
 
         #cards-box {
-            margin-top: 12px;
+            position: relative;     /* 이건 원래 없었음 */
+            margin-top: 12px;       /* 수정함, 원래 값 12px */
         }
         #login-text {
             position:absolute;
@@ -240,16 +242,18 @@
         /* ------------------------------ 댓글 영역 스타일 -------------------------------*/
         .comments-area{
             margin-top: 10px;
+            padding-top: 10px;              /* 댓글 영역 위쪽 간격 */
+            border-top: 1px solid #ced4da;  /* 댓글 영역 위에 구분선 추가 */
         }
 
         .comments h2 {
-            font-size: 10px;
+            font-size: 12px;
             font-weight: bold;
             margin-bottom: 10px;
         }
 
         .comment-field {
-            width: 100%;
+            width: calc(100% - 20px);       /* 왼쪽 오른쪽 여백 제거, 디폴트값 100%*/
             height: 80px;
             padding: 10px;
             margin-bottom: 10px;
@@ -268,7 +272,7 @@
             height: 22px;
         }
     </style>
-    <script>
+    <script type="text/javascript">
         const host = 'http://' + window.location.host;
         // -------------------------------------- 토큰 시작 ---------------------------------
         $(document).ready(function () {
@@ -536,7 +540,47 @@
                 }
             });
         }
+        // -------------------------------- 사진 업로드 시작 --------------------------
+        document.getElementById("file").addEventListener("change", uploadResource);
+        document.getElementById("remove").addEventListener("click", removeResource);
 
+        function uploadResource() {
+            const file = document.getElementById("file");
+            const formData = new FormData();
+            formData.append("file", file.files[0]);
+
+            fetch("/api/resource", {
+                method : "POST"
+                , body : formData
+            })
+                .then(result => result.json())
+                .then(data => {
+                    document.getElementById("img").setAttribute("src", data.path);
+                    document.getElementById("remove").setAttribute("key", data.key)
+                })
+                .catch(error => console.log(`error => ${error}`));
+        }
+        function removeResource() {
+            const key = document.getElementById("remove").getAttribute("key");
+            if (!key) {
+                return;
+            }
+            const formData = new FormData();
+            formData.append("key", key);
+
+            fetch("/api/resource", {
+                method : "DELETE"
+                , body : formData
+            })
+                .then(result => {
+                    if (result.ok && result.status === 200) {
+                        alert("해당 이미지가 삭제되었습니다.");
+                        document.getElementById("img").removeAttribute("src");
+                    }
+                })
+                .catch(error => console.log(`error => ${error}`));
+        }
+        //---------------------------------사진 업로드 끝 ------------------------------
         //---------------------------------- 게시글 끝 -----------------------------------
         function logout() {
             // 토큰 삭제
@@ -557,6 +601,24 @@
             }
 
             return auth;
+        }
+        // ---------------------------- 모달 창 시작 -------------------------
+        // 메모를 클릭하면 해당 메모의 세부 정보를 보여주는 함수
+        function showMemoDetails(id) {
+            // 메모의 세부 정보를 가져오는 AJAX 요청
+            $.ajax({
+                type: 'GET',
+                url: `/api/boards/${id}`,
+                success: function (response) {
+                    // 세부 정보를 모달에 표시
+                    $('#memoDetailsTitle').text(response.username + '님의 오늘 고양이와의 순간');
+                    $('#memoDetailsContents').text(response.contents);
+                    $('#memoDetailsModal').modal('show'); // 모달 창 열기
+                },
+                error: function (error) {
+                    console.error('메모 세부 정보를 불러오는 동안 오류가 발생했습니다:', error);
+                }
+            });
         }
     </script>
 </head>
@@ -584,12 +646,23 @@
     <div class="area-write">
         <textarea class="field" placeholder="공유하고 싶은 오늘의 고양이 모먼트" name="contents" id="contents" cols="30"
                   rows="10"></textarea>
+        <!-- 사진 업로드 영역 -->
+        <div style="height: 50px;">
+            <input type="file" id="file" style="display: none;">
+            <label for="file" style="color: blue;cursor: pointer">업로드</label>
+            <input type="button" id="remove" style="display: none;">
+            <label for="remove" style="color: red;cursor: pointer">삭제</label>
+        </div>
+        <div>
+            <img id="img"/>
+        </div>
+        <!-- 사진 업로드 영역 끝 -->
         <!--            <button class="btn btn-danger" onclick="writePost()">작성하기</button>-->
         <img src="../static/images/send.png" alt="" onclick="writePost()">
     </div>
     <div id="cards-box" class="area-read">
         <!-- 카드 영역 -->
-        <div class="card">
+        <div class="card" onclick="showMemoDetails('${id}')"> <!-- 메모 아이디를 인자로 전달 -->
             <!-- date/username 영역 -->
             <div class="metadata">
                 <div class="date">
@@ -609,14 +682,24 @@
                 <img id="1-delete" class="icon-delete" src="../static/images/delete.png" alt="" onclick="deleteOne('1')">
                 <img id="1-submit" class="icon-end-edit" src="../static/images/done.png" alt="" onclick="submitEdit('1')">
             </div>
-            <!-- 댓글 영역 -->
-            <div class="comments-area">
-                <h2>댓글</h2>
-                <textarea id="${id}-comments" class="comment-field" placeholder="서로 존중하는 댓글을 입력해주세요." cols="15" rows="10"></textarea>
-                <!-- 버튼 영역 -->
-                <div>
-                    <img src="../static/images/send_comment.png" alt="" onclick="writeComment(`${id}`)">
-                    <!--    <button onclick="writeComment(`${id}`)">댓글 작성</button> -->
+        </div>
+        <!-- 모달 창 -->
+        <div class="modal fade" id="memoDetailsModal" tabindex="-1" role="dialog" aria-labelledby="memoDetailsModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="memoDetailsTitle">메모 세부 정보</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="memoDetailsContents"></p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                    </div>
                 </div>
             </div>
         </div>

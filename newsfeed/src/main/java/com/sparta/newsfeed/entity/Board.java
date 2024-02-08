@@ -26,18 +26,25 @@ public class Board extends Timestamped {
     @Column(columnDefinition = "TEXT")
     private String contents;
 
+//    @Column
+//    private String boardImg;
+
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
     private List<Comment> commentList = new ArrayList<>();
+
+    // 글 쓰기
+//    public Board(BoardRequestDto requestDto, User user, String boardImg) {
+//        this.contents = requestDto.getContents();
+//        this.user = user;
+//        this.boardImg = boardImg;
+//    }
 
     public Board(BoardRequestDto requestDto, User user) {
         this.contents = requestDto.getContents();
         this.user = user;
     }
 
-    public Board(BoardRequestDto requestDto) {
-        this.contents = requestDto.getContents();
-    }
-
+    // 업데이트
     public void update(BoardRequestDto requestDto, User user) {
         this.contents = requestDto.getContents();
         this.user = user;

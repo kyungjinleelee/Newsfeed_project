@@ -1,5 +1,6 @@
 package com.sparta.newsfeed.service;
 
+import com.sparta.newsfeed.dto.BoardDetailDto;
 import com.sparta.newsfeed.dto.BoardRequestDto;
 import com.sparta.newsfeed.dto.BoardResponseDto;
 import com.sparta.newsfeed.entity.Board;
@@ -18,6 +19,7 @@ public class BoardService {
 
     private BoardRepository boardRepository;
 
+
     @Autowired
     public BoardService(BoardRepository boardRepository) {
         this.boardRepository = boardRepository;
@@ -33,7 +35,7 @@ public class BoardService {
     // 글 쓰기
     public BoardResponseDto createBoard(BoardRequestDto requestDto, User user) {
         // RequestDto -> Entity
-        Board board = new Board(requestDto, user);    // 여기 requestDto 에서 에러낫엇는데 ㅠ
+        Board board = new Board(requestDto, user);
 
         // DB 저장
         Board saveBoard = boardRepository.save(board);
@@ -89,5 +91,12 @@ public class BoardService {
         return boardRepository.findById(id).orElseThrow(() ->   // board가 null이라면 exception 반환
                 new IllegalArgumentException("선택한 글은 존재하지 않습니다.")
         );
+    }
+
+    // 게시글 상세
+    public BoardDetailDto show(Long id) {
+        return boardRepository.findById(id)
+                .map(BoardDetailDto::createBoardDto)
+                .orElse(null);
     }
 }
