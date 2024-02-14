@@ -1,6 +1,6 @@
 package com.sparta.newsfeed.controller;
 
-import com.sparta.newsfeed.entity.UserRoleEnum;
+import com.sparta.newsfeed.domain.UserRoleEnum;
 import com.sparta.newsfeed.security.UserDetailsImpl;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.GrantedAuthority;

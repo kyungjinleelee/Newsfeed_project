@@ -1,8 +1,8 @@
 package com.sparta.newsfeed.service;
 
-import com.sparta.newsfeed.dto.SignupRequestDto;
-import com.sparta.newsfeed.entity.User;
-import com.sparta.newsfeed.entity.UserRoleEnum;
+import com.sparta.newsfeed.dto.RequestDto.SignupRequestDto;
+import com.sparta.newsfeed.domain.User;
+import com.sparta.newsfeed.domain.UserRoleEnum;
 import com.sparta.newsfeed.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

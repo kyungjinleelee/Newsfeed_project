@@ -1,0 +1,33 @@
+package com.sparta.newsfeed.util.GlobalResponse.code;
+
+import lombok.Getter;
+import org.springframework.http.HttpStatus;
+
+// 기능 : 응답용 메세지 커스텀
+@Getter
+public enum StatusCode {
+
+    // ====================== 예외 응답 코드 ========================
+    // 400 BAD_REQUEST : 잘못된 요청
+    BAD_REQUEST(HttpStatus.BAD_REQUEST, "400", "요청이 올바르지 않습니다"),
+    LOGIN_MATCH_FAIL(HttpStatus.BAD_REQUEST, "400", "회원을 찾을 수 없습니다."),
+    FILE_DELETE_FAILED(HttpStatus.NOT_FOUND, "404", "파일 삭제 실패"),
+    FILE_CONVERT_FAILED(HttpStatus.NOT_FOUND, "404", "파일 전환 실패"),
+    BOARD_NOT_FOUND(HttpStatus.NOT_FOUND, "404", "해당 게시글이 없습니다."),
+    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "404", "댓글이 존재하지 않습니다."),
+    NO_AUTH_USER(HttpStatus.BAD_REQUEST, "403", "작성자 정보와 일치하지 않습니다."),
+    // ====================== 성공 응답 코드 =========================
+    OK(HttpStatus.OK, "200", "응답이 정상 처리 되었습니다."),
+    DELETE_OK(HttpStatus.OK, "200", "삭제 성공했습니다."),
+    ;
+
+    private final HttpStatus httpStatus;
+    private final String statusCode;
+    private final String statusMsg;
+
+    StatusCode(HttpStatus httpStatus, String statusCode, String statusMsg) {
+        this.httpStatus = httpStatus;
+        this.statusCode = statusCode;
+        this.statusMsg = statusMsg;
+    }
+}

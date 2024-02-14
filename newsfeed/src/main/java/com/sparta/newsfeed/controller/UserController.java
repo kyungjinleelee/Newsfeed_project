@@ -1,7 +1,7 @@
 package com.sparta.newsfeed.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.sparta.newsfeed.dto.SignupRequestDto;
+import com.sparta.newsfeed.dto.RequestDto.SignupRequestDto;
 import com.sparta.newsfeed.jwt.JwtUtil;
 import com.sparta.newsfeed.service.KakaoService;
 import com.sparta.newsfeed.service.UserService;

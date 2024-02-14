@@ -1,0 +1,65 @@
+package com.sparta.newsfeed.domain;
+
+import com.sparta.newsfeed.dto.RequestDto.BoardRequestDto;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Entity
+@Getter
+@NoArgsConstructor
+@AllArgsConstructor
+@Table(name = "board")
+public class Board extends Timestamped {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;                                 // 보드 id (Auto increment)
+
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)  // User 와 연관 관계 설정 (외래키 설정)
+    private User user;                               // User 객체 전체
+
+    @Column(columnDefinition = "TEXT")
+    private String contents;
+
+    @Column
+    private String name;                             // 작성자 닉네임
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)     // 연관된 이미지 파일 정보, cascade로 함께 삭제되도록 설정
+    private List<ImageFile> imageFileList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
+    private List<Comment> commentList = new ArrayList<>();
+
+    // 글 쓰기
+//    public Board(BoardRequestDto requestDto, User user, String boardImg) {
+//        this.contents = requestDto.getContents();
+//        this.user = user;
+//        this.boardImg = boardImg;
+//    }
+
+    public Board(BoardRequestDto requestDto, User user) {
+        this.contents = requestDto.getContents();
+        this.user = user;
+        this.name = name;
+    }
+
+    // 업데이트
+    public void update(BoardRequestDto requestDto, User user) {
+        this.contents = requestDto.getContents();
+        this.user = user;
+    }
+
+
+
+//    public static Board of(BoardRequestDto requestDto, User user) {
+//        return Board.builder()
+//                .requestDto(requestDto)
+//                .user(user)
+//                .build();
+//    }
+}

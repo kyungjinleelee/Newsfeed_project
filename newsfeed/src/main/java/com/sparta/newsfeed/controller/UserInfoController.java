@@ -1,7 +1,7 @@
 package com.sparta.newsfeed.controller;
 
 import com.sparta.newsfeed.dto.UserInfoDto;
-import com.sparta.newsfeed.entity.UserRoleEnum;
+import com.sparta.newsfeed.domain.UserRoleEnum;
 import com.sparta.newsfeed.security.UserDetailsImpl;
 import com.sparta.newsfeed.service.UserInfoService;
 import com.sparta.newsfeed.service.UserService;

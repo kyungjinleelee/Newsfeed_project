@@ -39,6 +39,10 @@ dependencies {
 	// json
 	implementation 'org.json:json:20230227'
 
+	// 직렬화
+	implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+	implementation 'com.fasterxml.jackson.core:jackson-databind'
+
 	// Security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'

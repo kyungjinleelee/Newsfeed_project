@@ -1,8 +1,8 @@
 package com.sparta.newsfeed.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.sparta.newsfeed.dto.LoginRequestDto;
-import com.sparta.newsfeed.entity.UserRoleEnum;
+import com.sparta.newsfeed.dto.RequestDto.LoginRequestDto;
+import com.sparta.newsfeed.domain.UserRoleEnum;
 import com.sparta.newsfeed.jwt.JwtUtil;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.http.HttpServletRequest;

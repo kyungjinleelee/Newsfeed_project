@@ -1,6 +1,6 @@
 package com.sparta.newsfeed.jwt;
 
-import com.sparta.newsfeed.entity.UserRoleEnum;
+import com.sparta.newsfeed.domain.UserRoleEnum;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
