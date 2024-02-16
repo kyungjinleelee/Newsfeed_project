@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Optional;
 
 // 기능 : 보드 CRUD 서비스
-@Slf4j
+@Slf4j(topic = "보드 서비스")
 @Service
 @RequiredArgsConstructor
 public class BoardService {
@@ -36,7 +36,6 @@ public class BoardService {
     private final BoardRepository boardRepository;  // 얘는 임시로 (전체보기 용)
 
 
-
     // 전체보기
     public List<BoardResponseDto> getBoards() {
         // DB 조회
@@ -45,28 +44,49 @@ public class BoardService {
 
     // 글 쓰기
     @Transactional
-    public BoardResponseDto createBoard(BoardRequestDto requestDto, List<MultipartFile> multipartFilelist, User user) {
-        // RequestDto -> Entity
+    public BoardResponseDto createBoardContents(BoardRequestDto requestDto, User user) {
+        log.info("글 생성 진입");
+// RequestDto -> Entity
         Board board = new Board(requestDto, user);
-
-        // DB 저장
+        log.info("받아온 정보로 새로운 글 생성: ", board);
+// DB 저장
         boardCommand.saveBoard(board);
+        log.info("db저장 성공");
 
-        if (multipartFilelist != null) {
-            awsS3Uploader.upload(multipartFilelist, "static", board, user);
-        }
+// Entity -> ResponseDto
 
-        List<ImageFile> imageFiles = imageFileRepository.findAllByBoard(board);
-        List<String> imagePath = new ArrayList<>();
-        for (ImageFile imageFile : imageFiles) {
-            imagePath.add(imageFile.getPath());
-        }
-
-        // Entity -> ResponseDto
-        BoardResponseDto boardResponseDto = new BoardResponseDto(board, imagePath);
+        BoardResponseDto boardResponseDto = new BoardResponseDto(board);
+        log.info("생성된 dto", boardResponseDto);
 
         return boardResponseDto;
     }
+
+// @Transactional
+// public BoardResponseDto createBoardImages(List<MultipartFile> multipartFilelist, User user) {
+// log.info("글 생성 진입");
+// // RequestDto -> Entity
+//// Board board = new Board(requestDto, user);
+// log.info("받아온 정보로 새로운 글 생성: ", board);
+// // DB 저장
+//// boardCommand.saveBoard(board);
+// log.info("db저장 성공");
+// if (multipartFilelist != null) {
+// awsS3Uploader.upload(multipartFilelist, "static", board, user);
+// }
+//
+// List<ImageFile> imageFiles = imageFileRepository.findAllByBoard(board);
+// List<String> imagePath = new ArrayList<>();
+// for (ImageFile imageFile : imageFiles) {
+// imagePath.add(imageFile.getPath());
+// }
+//
+// // Entity -> ResponseDto
+//
+// BoardResponseDto boardResponseDto = new BoardResponseDto(board, imagePath);
+// log.info("생성된 dto", boardResponseDto);
+//
+// return boardResponseDto;
+// }
 
     // 게시글 상세 조회
     public List<BoardResponseDto> getOneBoard(Long id) {

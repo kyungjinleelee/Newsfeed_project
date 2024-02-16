@@ -20,7 +20,7 @@ public class BoardResponseDto {
     private Long id;                    // 고유 id
     private String username;            // 작성자 아이디
     private String contents;            // 게시글 내용
-    private String name;                // 작성자 닉네임
+//    private String name;                // 작성자 닉네임
     private int cmtCnt;                 // 댓글 갯수
     private List<String> imageList;     // 이미지
 
@@ -37,7 +37,7 @@ public class BoardResponseDto {
         this.id = board.getId();
         this.username = board.getUser().getUsername();
         this.contents = board.getContents();
-        this.name = board.getUser().getName();
+    //    this.name = board.getUser().getName();
         this.cmtCnt = board.getCommentList().size();
         this.createdAt = board.getCreatedAt();
         this.modifiedAt = board.getModifiedAt();
@@ -48,8 +48,8 @@ public class BoardResponseDto {
         this.id = board.getId();
         this.contents = board.getContents();
         this.cmtCnt = board.getCommentList().size();
-        this.username = board.getUser().getUsername();  // 이건 임시로
-        this.name = board.getUser().getName();
+        this.username = board.getUser().getUsername();
+    //    this.name = board.getUser().getName();
         this.createdAt = board.getCreatedAt();
         this.modifiedAt = board.getModifiedAt();
     }

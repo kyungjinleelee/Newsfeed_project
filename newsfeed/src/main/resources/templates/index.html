@@ -1,692 +1,692 @@
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <meta name="viewport" content="width=device-width, initial-scale=1.0">-->
-<!--    <title>오늘의 야옹 타임</title>-->
-
-<!--    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>-->
-<!--    <script src="https://code.jquery.com/jquery-3.7.0.min.js"-->
-<!--            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>-->
-<!--    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>-->
-<!--    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">-->
-
-<!--    <style>-->
-<!--        @import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css);-->
-
-<!--        body {-->
-<!--            margin: 0px;-->
-<!--        }-->
-
-<!--        .area-edit {-->
-<!--            display: none;-->
-<!--        }-->
-
-<!--        .wrap {-->
-<!--            width: 538px;-->
-<!--            margin: 10px auto;-->
-<!--        }-->
-
-<!--        #contents {-->
-<!--            width: 538px;-->
-<!--        }-->
-
-<!--        .area-write {-->
-<!--            position: relative;-->
-<!--            width: 538px;-->
-<!--        }-->
-
-<!--        .area-write img {-->
-<!--            cursor: pointer;-->
-<!--            position: absolute;-->
-<!--            width: 22.2px;-->
-<!--            height: 18.7px;-->
-<!--            bottom: 15px;-->
-<!--            right: 17px;-->
-<!--        }-->
-
-<!--        .background-header {-->
-<!--            position: fixed;-->
-<!--            z-index: -1;-->
-<!--            top: 0px;-->
-<!--            width: 100%;-->
-<!--            height: 428px;-->
-<!--            background-color: #d3b3f5;-->
-<!--        }-->
-
-<!--        .background-body {-->
-<!--            position: fixed;-->
-<!--            z-index: -1;-->
-<!--            top: 428px;-->
-<!--            height: 100%;-->
-<!--            width: 100%;-->
-<!--            background-color: #f1e5fa;-->
-<!--        }-->
-
-<!--        .header {-->
-<!--            margin-top: 50px;-->
-<!--        }-->
-
-<!--        .header h2 {-->
-<!--            /*font-family: 'Noto Sans KR', sans-serif;*/-->
-<!--            height: 33px;-->
-<!--            font-size: 42px;-->
-<!--            font-weight: 500;-->
-<!--            font-stretch: normal;-->
-<!--            font-style: normal;-->
-<!--            line-height: 0.79;-->
-<!--            letter-spacing: -0.5px;-->
-<!--            text-align: center;-->
-<!--            color: #ffffff;-->
-<!--        }-->
-
-<!--        .header p {-->
-<!--            margin: 40px auto;-->
-<!--            width: 217px;-->
-<!--            height: 48px;-->
-<!--            font-family: 'Noto Sans KR', sans-serif;-->
-<!--            font-size: 16px;-->
-<!--            font-weight: 500;-->
-<!--            font-stretch: normal;-->
-<!--            font-style: normal;-->
-<!--            line-height: 1.5;-->
-<!--            letter-spacing: -1.12px;-->
-<!--            text-align: center;-->
-<!--            color: #ffffff;-->
-<!--        }-->
-
-<!--        textarea.field {-->
-<!--            width: 502px !important;-->
-<!--            height: 146px;-->
-<!--            border-radius: 5px;-->
-<!--            background-color: #ffffff;-->
-<!--            border: none;-->
-<!--            padding: 18px;-->
-<!--            resize: none;-->
-<!--        }-->
-
-<!--        textarea.field::placeholder {-->
-<!--            width: 216px;-->
-<!--            height: 16px;-->
-<!--            font-family: 'Noto Sans KR', sans-serif;-->
-<!--            font-size: 16px;-->
-<!--            font-weight: normal;-->
-<!--            font-stretch: normal;-->
-<!--            font-style: normal;-->
-<!--            line-height: 1;-->
-<!--            letter-spacing: -0.96px;-->
-<!--            text-align: left;-->
-<!--            color: #868e96;-->
-<!--        }-->
-
-<!--        .card {-->
-<!--            width: 538px;-->
-<!--            border-radius: 5px;-->
-<!--            background-color: #ffffff;-->
-<!--            margin-bottom: 12px;-->
-<!--            position: relative;  /* 댓글 영역과 겹치지 않도록 */-->
-<!--        }-->
-
-<!--        .card .metadata {-->
-<!--            position: relative;-->
-<!--            display: flex;-->
-<!--            font-family: 'Spoqa Han Sans';-->
-<!--            font-size: 11px;-->
-<!--            font-weight: normal;-->
-<!--            font-stretch: normal;-->
-<!--            font-style: normal;-->
-<!--            line-height: 1;-->
-<!--            letter-spacing: -0.77px;-->
-<!--            text-align: left;-->
-<!--            color: #adb5bd;-->
-<!--            height: 14px;-->
-<!--            padding: 10px 23px;-->
-<!--        }-->
-
-<!--        .card .metadata .date {-->
-
-<!--        }-->
-
-<!--        .card .metadata .username {-->
-<!--            margin-left: 20px;-->
-<!--        }-->
-
-<!--        .contents {-->
-<!--            padding: 0px 23px;-->
-<!--            word-wrap: break-word;-->
-<!--            word-break: break-all;-->
-<!--        }-->
-
-<!--        .contents div.edit {-->
-<!--            display: none;-->
-<!--        }-->
-
-<!--        .contents textarea.te-edit {-->
-<!--            border-right: none;-->
-<!--            border-top: none;-->
-<!--            border-left: none;-->
-<!--            resize: none;-->
-<!--            border-bottom: 1px solid #212529;-->
-<!--            width: 100%;-->
-<!--            font-family: 'Spoqa Han Sans';-->
-<!--        }-->
-
-<!--        .footer {-->
-<!--            position: relative;-->
-<!--            height: 40px;-->
-<!--        }-->
-
-<!--        .footer img.icon-start-edit {-->
-<!--            cursor: pointer;-->
-<!--            position: absolute;-->
-<!--            bottom: 14px;-->
-<!--            right: 55px;-->
-<!--            width: 18px;-->
-<!--            height: 18px;-->
-<!--        }-->
-
-<!--        .footer img.icon-end-edit {-->
-<!--            cursor: pointer;-->
-<!--            position: absolute;-->
-<!--            display: none;-->
-<!--            bottom: 14px;-->
-<!--            right: 55px;-->
-<!--            width: 20px;-->
-<!--            height: 15px;-->
-<!--        }-->
-
-<!--        .footer img.icon-delete {-->
-<!--            cursor: pointer;-->
-<!--            position: absolute;-->
-<!--            bottom: 12px;-->
-<!--            right: 19px;-->
-<!--            width: 14px;-->
-<!--            height: 18px;-->
-<!--        }-->
-
-<!--        #cards-box {-->
-<!--            position: relative;     /* 이건 원래 없었음 */-->
-<!--            margin-top: 12px;       /* 수정함, 원래 값 12px */-->
-<!--        }-->
-<!--        #login-text {-->
-<!--            position:absolute;-->
-<!--            top:48px;-->
-<!--            right:50px;-->
-<!--            font-size: 18px;-->
-<!--            font-family: 'Spoqa Han Sans';-->
-<!--            font-size: 18px;-->
-<!--            font-weight: 500;-->
-<!--            font-stretch: normal;-->
-<!--            font-style: normal;-->
-<!--            line-height: 1;-->
-<!--            letter-spacing: 0.36px;-->
-<!--            text-align: center;-->
-<!--            color: #ffffff;-->
-<!--        }-->
-<!--        #login-text1 {-->
-<!--            position:absolute;-->
-<!--            top:48px;-->
-<!--            right:200px;-->
-<!--            font-size: 18px;-->
-<!--            font-family: 'Spoqa Han Sans';-->
-<!--            font-size: 18px;-->
-<!--            font-weight: 500;-->
-<!--            font-stretch: normal;-->
-<!--            font-style: normal;-->
-<!--            line-height: 1;-->
-<!--            letter-spacing: 0.36px;-->
-<!--            text-align: center;-->
-<!--            color: #ffffff;-->
-<!--        }-->
-<!--        /* &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; 댓글 영역 스타일 -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;*/-->
-<!--        .comments-area{-->
-<!--            margin-top: 10px;-->
-<!--            padding-top: 10px;              /* 댓글 영역 위쪽 간격 */-->
-<!--            border-top: 1px solid #ced4da;  /* 댓글 영역 위에 구분선 추가 */-->
-<!--        }-->
-
-<!--        .comments h2 {-->
-<!--            font-size: 12px;-->
-<!--            font-weight: bold;-->
-<!--            margin-bottom: 10px;-->
-<!--        }-->
-
-<!--        .comment-field {-->
-<!--            width: calc(100% - 20px);       /* 왼쪽 오른쪽 여백 제거, 디폴트값 100%*/-->
-<!--            height: 80px;-->
-<!--            padding: 10px;-->
-<!--            margin-bottom: 10px;-->
-<!--            border: 1px solid #ced4da;-->
-<!--            border-radius: 5px;-->
-<!--            resize: none;-->
-<!--        }-->
-
-<!--        .comment-field::placeholder {-->
-<!--            color: #868e96;-->
-<!--        }-->
-
-<!--        .comments img {-->
-<!--            cursor: pointer;-->
-<!--            width: 22px;-->
-<!--            height: 22px;-->
-<!--        }-->
-<!--    </style>-->
-<!--    <script type="text/javascript">-->
-<!--        const host = 'http://' + window.location.host;-->
-<!--        // &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; 토큰 시작 -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
-<!--        $(document).ready(function () {-->
-<!--            const auth = getToken();-->
-
-<!--            if (auth !== undefined && auth !== '') {-->
-<!--                $.ajaxPrefilter(function (options, originalOptions, jqXHR) {-->
-<!--                    jqXHR.setRequestHeader('Authorization', auth);-->
-<!--                });-->
-<!--            } else {-->
-<!--                window.location.href = host + '/api/user/login-page';-->
-<!--                return;-->
-<!--            }-->
-
-<!--            $.ajax({-->
-<!--                type: 'GET',-->
-<!--                //  url: `/`,-->
-<!--                url: `/api/user-info`,-->
-<!--                contentType: 'application/json',-->
-<!--            })-->
-<!--                .done(function (res, status, xhr) {-->
-<!--                    const username = res.username;-->
-<!--                    const isAdmin = !!res.admin;-->
-
-<!--                    if (!username) {    // 사용자 명이 없으면 로그인 페이지로 리디렉션-->
-<!--                        window.location.href = host + '/api/user/login-page';-->
-<!--                        return;-->
-<!--                    }-->
-<!--                    // '내 프로필' 링크 클릭 이벤트 처리-->
-<!--                    $('#login-text1').on('click', function(event) {-->
-<!--                        event.preventDefault(); // 링크의 기본 동작(페이지 이동)을 방지-->
-<!--                        window.location.href = host + '/user-info'; // 사용자 프로필 페이지로 이동-->
-<!--                    });-->
-
-<!--                    // $('#username').text(username);  // html에 사용자 정보 표시-->
-<!--                    // if (isAdmin) {-->
-<!--                    //     $('#admin').text(true);-->
-<!--                    //     showUserinfo(true);-->
-<!--                    // } else {-->
-<!--                    //     showUserinfo();     // 관리자 아닌 경우 기본 사용자 정보만 표시-->
-<!--                    // }-->
-<!--                })-->
-<!--                .fail(function (jqXHR, textStatus) {-->
-<!--                    logout();       // AJAX 요청 실패 시 로그아웃-->
-<!--                });-->
-<!--        })-->
-<!--        //&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; 토큰 끝 &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
-
-<!--        // -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; 게시글 시작 -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
-
-<!--        // 사용자가 내용을 올바르게 입력하였는지 확인합니다.-->
-<!--        function isValidContents(contents) {-->
-<!--            if (contents == '') {-->
-<!--                alert('내용을 입력해주세요');-->
-<!--                return false;-->
-<!--            }-->
-<!--            // if (contents.trim().length > 140) {-->
-<!--            //     alert('공백 포함 140자 이하로 입력해주세요');-->
-<!--            //     return false;-->
-<!--            // }-->
-<!--            return true;-->
-<!--        }-->
-
-<!--        // 수정 버튼을 눌렀을 때, 기존 작성 내용을 textarea 에 전달합니다.-->
-<!--        // 숨길 버튼을 숨기고, 나타낼 버튼을 나타냅니다.-->
-<!--        function editPost(id) {-->
-<!--            showEdits(id);-->
-<!--            let contents = $(`#${id}-contents`).text().trim();-->
-<!--            $(`#${id}-textarea`).val(contents);-->
-<!--        }-->
-
-<!--        function showEdits(id) {-->
-<!--            $(`#${id}-editarea`).show();-->
-<!--            $(`#${id}-submit`).show();-->
-<!--            $(`#${id}-delete`).show();-->
-
-<!--            $(`#${id}-contents`).hide();-->
-<!--            $(`#${id}-edit`).hide();-->
-<!--        }-->
-
-<!--        $(document).ready(function () {-->
-<!--            // HTML 문서를 로드할 때마다 실행합니다.-->
-<!--            getMessages();-->
-<!--        })-->
-
-<!--        // 메모를 불러와서 보여줍니다.-->
-<!--        function getMessages() {-->
-<!--            // 1. 기존 메모 내용을 지웁니다.-->
-<!--            $('#cards-box').empty();-->
-<!--            // 2. 메모 목록을 불러와서 HTML로 붙입니다.-->
-<!--            $.ajax({-->
-<!--                type: 'GET',-->
-<!--                url: '/api/boards',-->
-<!--                success: function (response) {-->
-<!--                    for (let i = 0; i < response.length; i++) {-->
-<!--                        let message = response[i];-->
-<!--                        let id = message['id'];-->
-<!--                        let username = message['username'];-->
-<!--                        let contents = message['contents'];-->
-<!--                        let modifiedAt = message['modifiedAt'];-->
-<!--                        addHTML(id, username, contents, modifiedAt);-->
-<!--                    }-->
-<!--                }-->
-<!--            })-->
-<!--        }-->
-
-<!--        // 메모 하나를 HTML로 만들어서 body 태그 내 원하는 곳에 붙입니다.-->
-<!--        function addHTML(id, username, contents, modifiedAt, comments) {-->
-<!--            // 1. HTML 태그를 만듭니다.-->
-<!--            let tempHtml = `<div class="card">-->
-<!--                &lt;!&ndash; date/username 영역 &ndash;&gt;-->
-<!--                <div class="metadata">-->
-<!--                    <div class="date">-->
-<!--                        ${modifiedAt}-->
-<!--                    </div>-->
-<!--                    <div id="${id}-username" class="username">-->
-<!--                        ${username}-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                &lt;!&ndash; contents 조회/수정 영역&ndash;&gt;-->
-<!--                <div class="contents">-->
-<!--                    <div id="${id}-contents" class="text">-->
-<!--                        ${contents}-->
-<!--                    </div>-->
-<!--                    <div id="${id}-editarea" class="edit">-->
-<!--                        <textarea id="${id}-textarea" class="te-edit" name="" id="" cols="30" rows="5"></textarea>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--                &lt;!&ndash; 버튼 영역&ndash;&gt;-->
-<!--                <div class="footer">-->
-<!--                    <img id="${id}-edit" class="icon-start-edit" src="../static/images/edit.png" alt="" onclick="editPost('${id}')">-->
-<!--                    <img id="${id}-delete" class="icon-delete" src="../static/images/delete.png" alt="" onclick="deleteOne('${id}')">-->
-<!--                    <img id="${id}-submit" class="icon-end-edit" src="../static/images/done.png" alt="" onclick="submitEdit('${id}')">-->
-<!--                </div>-->
-<!--            </div>`;-->
-
-<!--            // 2. #cards-box에 HTML을 붙인다.-->
-<!--            $('#cards-box').append(tempHtml);-->
-
-<!--            // 댓글을 불러오고 추가하는 함수 호출-->
-<!--            getComments(id, comments);-->
-<!--        }-->
-
-<!--        // 메모를 생성합니다.-->
-<!--        function writePost() {-->
-<!--            // 1. 작성한 메모를 불러옵니다.-->
-<!--            let contents = $('#contents').val();-->
-
-<!--            // 2. 작성한 메모가 올바른지 isValidContents 함수를 통해 확인합니다.-->
-<!--            if (isValidContents(contents) == false) {-->
-<!--                return;-->
-<!--            }-->
-<!--            // 3. 서버로부터 현재 username을 가져옵니다.-->
-<!--            $.ajax({-->
-<!--                type: "GET",-->
-<!--                url: "/api/user-info",-->
-<!--                contentType: "application/json",-->
-<!--                success: function (userResponse) {-->
-<!--                    // 4. 현재 사용자의 username을 가져옵니다-->
-<!--                    let username = userResponse.username;-->
-
-<!--                    // 5. 전달할 data JSON으로 만듭니다.-->
-<!--                    let data = {'username': username, 'contents': contents};-->
-
-<!--                    // 6. POST /api/boards에 data 전달-->
-<!--                    $.ajax({-->
-<!--                        type: "POST",-->
-<!--                        url: "/api/boards",-->
-<!--                        contentType: "application/json",-->
-<!--                        data: JSON.stringify(data),-->
-<!--                        success: function(response) {-->
-<!--                            alert("오늘의 야옹타임 작성 완료!");-->
-<!--                            window.location.reload();-->
-<!--                        }-->
-<!--                    });-->
-<!--                },-->
-<!--                // 에러 처리 로직 추가-->
-<!--                error: function (error) {-->
-<!--                    console.error("사용자 정보를 가져오는데 실패했습니다.");-->
-<!--                }-->
-<!--            });-->
-<!--        }-->
-
-<!--        // 메모를 수정합니다.-->
-<!--        function submitEdit(id) {-->
-<!--            // 1. 작성 대상 메모의 username과 contents 를 확인합니다.-->
-<!--            let username = $(`#${id}-username`).text().trim();-->
-<!--            let contents = $(`#${id}-textarea`).val().trim();-->
-
-<!--            // 2. 작성한 메모가 올바른지 isValidContents 함수를 통해 확인합니다.-->
-<!--            if (isValidContents(contents) == false) {-->
-<!--                return;-->
-<!--            }-->
-
-<!--            // 3. 전달할 data JSON으로 만듭니다.-->
-<!--            let data = {'username': username, 'contents': contents};-->
-
-<!--            // 4. PUT /api/boards/{id} 에 data를 전달합니다.-->
-<!--            $.ajax({-->
-<!--                type: "PUT",-->
-<!--                url: `/api/boards/${id}`,-->
-<!--                contentType: "application/json",-->
-<!--                data: JSON.stringify(data),-->
-<!--                success: function (response) {-->
-<!--                    alert('메세지 수정에 성공하였습니다!');-->
-<!--                    window.location.reload();-->
-<!--                }-->
-<!--            });-->
-<!--        }-->
-
-<!--        // 메모를 삭제합니다.-->
-<!--        function deleteOne(id) {-->
-<!--            // 1. DELETE /api/boards/{id} 에 요청해서 메모를 삭제합니다.-->
-<!--            $.ajax({-->
-<!--                type: "DELETE",-->
-<!--                url: `/api/boards/${id}`,-->
-<!--                success: function (response) {-->
-<!--                    alert('메시지 삭제에 성공하였습니다.');-->
-<!--                    window.location.reload();-->
-<!--                }-->
-<!--            })-->
-<!--        }-->
-<!--        // -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; 댓글 시작 &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
-<!--        // 댓글을 불러오고 추가하는 함수-->
-<!--        function getComments(id, comments) {-->
-<!--            let commentList = $(`#${id}-comments`);-->
-<!--            commentList.empty();    // 기존 댓글 내용을 지움-->
-
-<!--            // comments가 존재하면 각각의 댓글을 HTML로 추가-->
-<!--            if (comments && comments.length > 0) {-->
-<!--                for (let i = 0; i < comments.length; i++) {-->
-<!--                    let comment = comments[i];-->
-<!--                    commentList.append(`<div class="comments-area">${comment.user.username}: ${comment.contents}</div>`)-->
-<!--                }-->
-<!--            }-->
-<!--        }-->
-
-<!--        // 댓글을 작성하는 함수-->
-<!--        function writeComment(id) {-->
-<!--            let commentInput = $(`#${id}-comments`);-->
-<!--            let commentContents = commentInput.val().trim();-->
-
-<!--            if (commentContents == '') {-->
-<!--                alert('댓글 내용을 입력해주세요.');-->
-<!--                return;-->
-<!--            }-->
-
-<!--            // 전달할 데이터를 JSON 으로 만듦-->
-<!--            let data = {'username' : 'anonymous', 'contents' : commentContents};-->
-
-<!--            // POST /api/comment/{id} 에 데이터를 전달-->
-<!--            $.ajax({-->
-<!--                type: 'POST',-->
-<!--                url: `/api/comment/${id}`,-->
-<!--                contentType: 'application/json',-->
-<!--                data: JSON.stringify(data),-->
-<!--                success: function (response) {-->
-<!--                    alert('댓글이 성공적으로 작성되었다냥!');-->
-<!--                    commentInput.val('');   // 댓글 입력창 다시 비우기-->
-<!--                    // 댓글을 다시 불러와서 화면에 갱신-->
-<!--                    getComments(id, response.comments);-->
-<!--                },-->
-<!--                error: function (error) {-->
-<!--                    console.error('댓글 작성 중 오류:', error);-->
-<!--                }-->
-<!--            });-->
-<!--        }-->
-<!--        // &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; 사진 업로드 시작 &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
-<!--        document.getElementById("file").addEventListener("change", uploadResource);-->
-<!--        document.getElementById("remove").addEventListener("click", removeResource);-->
-
-<!--        function uploadResource() {-->
-<!--            const file = document.getElementById("file");-->
-<!--            const formData = new FormData();-->
-<!--            formData.append("file", file.files[0]);-->
-
-<!--            fetch("/api/resource", {-->
-<!--                method : "POST"-->
-<!--                , body : formData-->
-<!--            })-->
-<!--                .then(result => result.json())-->
-<!--                .then(data => {-->
-<!--                    document.getElementById("img").setAttribute("src", data.path);-->
-<!--                    document.getElementById("remove").setAttribute("key", data.key)-->
-<!--                })-->
-<!--                .catch(error => console.log(`error => ${error}`));-->
-<!--        }-->
-<!--        function removeResource() {-->
-<!--            const key = document.getElementById("remove").getAttribute("key");-->
-<!--            if (!key) {-->
-<!--                return;-->
-<!--            }-->
-<!--            const formData = new FormData();-->
-<!--            formData.append("key", key);-->
-
-<!--            fetch("/api/resource", {-->
-<!--                method : "DELETE"-->
-<!--                , body : formData-->
-<!--            })-->
-<!--                .then(result => {-->
-<!--                    if (result.ok && result.status === 200) {-->
-<!--                        alert("해당 이미지가 삭제되었습니다.");-->
-<!--                        document.getElementById("img").removeAttribute("src");-->
-<!--                    }-->
-<!--                })-->
-<!--                .catch(error => console.log(`error => ${error}`));-->
-<!--        }-->
-<!--        //-&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;사진 업로드 끝 &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
-<!--        //&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; 게시글 끝 -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
-<!--        function logout() {-->
-<!--            // 토큰 삭제-->
-<!--            Cookies.remove('Authorization', {path: '/'});-->
-<!--            window.location.href = host + '/api/user/login-page';-->
-<!--        }-->
-
-<!--        function getToken() {-->
-<!--            let auth = Cookies.get('Authorization');-->
-
-<!--            if (auth === undefined) {-->
-<!--                return '';-->
-<!--            }-->
-
-<!--            // 카카오 로그인 사용한 경우 Bearer 추가-->
-<!--            if(auth.indexOf('Bearer') === -1 && auth !== ''){-->
-<!--                auth = 'Bearer ' + auth;-->
-<!--            }-->
-
-<!--            return auth;-->
-<!--        }-->
-<!--        // &#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45; 모달 창 시작 -&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
-<!--        // 메모를 클릭하면 해당 메모의 세부 정보를 보여주는 함수-->
-<!--        function showMemoDetails(id) {-->
-<!--            // 메모의 세부 정보를 가져오는 AJAX 요청-->
-<!--            $.ajax({-->
-<!--                type: 'GET',-->
-<!--                url: `/api/boards/${id}`,-->
-<!--                success: function (response) {-->
-<!--                    // 세부 정보를 모달에 표시-->
-<!--                    $('#memoDetailsTitle').text(response.username + '님의 오늘 고양이와의 순간');-->
-<!--                    $('#memoDetailsContents').text(response.contents);-->
-<!--                    $('#memoDetailsModal').modal('show'); // 모달 창 열기-->
-<!--                },-->
-<!--                error: function (error) {-->
-<!--                    console.error('메모 세부 정보를 불러오는 동안 오류가 발생했습니다:', error);-->
-<!--                }-->
-<!--            });-->
-<!--        }-->
-<!--    </script>-->
-<!--</head>-->
-
-<!--<body>-->
-<!--<div class="background-header">-->
-
-<!--</div>-->
-<!--<div class="background-body">-->
-
-<!--</div>-->
-<!--<div class="wrap">-->
-<!--    <div class="header">-->
-<!--        <h2>🐱Meow Time🐱</h2>-->
-<!--        <p>-->
-<!--            공유하고 싶은 오늘 고양이와의 순간-->
-<!--        </p>-->
-<!--        <a id="login-text1" href="/api/user-info">-->
-<!--            내 프로필 &lt;!&ndash; 클릭 시 프로필 화면과 내가 쓴 글이 모여져있도록 만들자 &ndash;&gt;-->
-<!--        </a>-->
-<!--        <a id="login-text" href="javascript:logout()">-->
-<!--            로그아웃-->
-<!--        </a>-->
-<!--    </div>-->
-<!--    <div class="area-write">-->
-<!--        <textarea class="field" placeholder="공유하고 싶은 오늘의 고양이 모먼트" name="contents" id="contents" cols="30"-->
-<!--                  rows="10"></textarea>-->
-<!--        &lt;!&ndash; 사진 업로드 영역 &ndash;&gt;-->
-<!--        <div style="height: 50px;">-->
-<!--            <input type="file" id="file" style="display: none;">-->
-<!--            <label for="file" style="color: blue;cursor: pointer">업로드</label>-->
-<!--            <input type="button" id="remove" style="display: none;">-->
-<!--            <label for="remove" style="color: red;cursor: pointer">삭제</label>-->
-<!--        </div>-->
-<!--        <div>-->
-<!--            <img id="img"/>-->
-<!--        </div>-->
-<!--        &lt;!&ndash; 사진 업로드 영역 끝 &ndash;&gt;-->
-<!--        &lt;!&ndash;            <button class="btn btn-danger" onclick="writePost()">작성하기</button>&ndash;&gt;-->
-<!--        <img src="../static/images/send.png" alt="" onclick="writePost()">-->
-<!--    </div>-->
-<!--    <div id="cards-box" class="area-read">-->
-<!--        &lt;!&ndash; 카드 영역 &ndash;&gt;-->
-<!--        <div class="card" onclick="showMemoDetails('${id}')"> &lt;!&ndash; 메모 아이디를 인자로 전달 &ndash;&gt;-->
-<!--            &lt;!&ndash; date/username 영역 &ndash;&gt;-->
-<!--            <div class="metadata">-->
-<!--                <div class="date">-->
-<!--                    October 10, 2020-->
-<!--                </div>-->
-<!--                <div class="username">-->
-<!--                    anonymous-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            &lt;!&ndash; contents 조회/수정 영역&ndash;&gt;-->
-<!--            <div class="contents">-->
-
-<!--            </div>-->
-<!--            &lt;!&ndash; 버튼 영역&ndash;&gt;-->
-<!--            <div class="footer">-->
-<!--                <img id="1-edit" class="icon-start-edit" src="../static/images/edit.png" alt="" onclick="editPost('1')">-->
-<!--                <img id="1-delete" class="icon-delete" src="../static/images/delete.png" alt="" onclick="deleteOne('1')">-->
-<!--                <img id="1-submit" class="icon-end-edit" src="../static/images/done.png" alt="" onclick="submitEdit('1')">-->
-<!--            </div>-->
-<!--        </div>-->
-
-
-<!--    </div>-->
-<!--</div>-->
-<!--</body>-->
-
-<!--</html>-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>오늘의 야옹 타임</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@500&display=swap" rel="stylesheet">
+
+    <style>
+        @import url(//spoqa.github.io/spoqa-han-sans/css/SpoqaHanSans-kr.css);
+
+        body {
+            margin: 0px;
+        }
+
+        .area-edit {
+            display: none;
+        }
+
+        .wrap {
+            width: 538px;
+            margin: 10px auto;
+        }
+
+        #contents {
+            width: 538px;
+        }
+
+        .area-write {
+            position: relative;
+            width: 538px;
+        }
+
+        .area-write img {
+            cursor: pointer;
+            position: absolute;
+            width: 22.2px;
+            height: 18.7px;
+            bottom: 15px;
+            right: 17px;
+        }
+
+        .background-header {
+            position: fixed;
+            z-index: -1;
+            top: 0px;
+            width: 100%;
+            height: 428px;
+            background-color: #d3b3f5;
+        }
+
+        .background-body {
+            position: fixed;
+            z-index: -1;
+            top: 428px;
+            height: 100%;
+            width: 100%;
+            background-color: #f1e5fa;
+        }
+
+        .header {
+            margin-top: 50px;
+        }
+
+        .header h2 {
+            /*font-family: 'Noto Sans KR', sans-serif;*/
+            height: 33px;
+            font-size: 42px;
+            font-weight: 500;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 0.79;
+            letter-spacing: -0.5px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        .header p {
+            margin: 40px auto;
+            width: 217px;
+            height: 48px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 16px;
+            font-weight: 500;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1.5;
+            letter-spacing: -1.12px;
+            text-align: center;
+            color: #ffffff;
+        }
+
+        textarea.field {
+            width: 502px !important;
+            height: 146px;
+            border-radius: 5px;
+            background-color: #ffffff;
+            border: none;
+            padding: 18px;
+            resize: none;
+        }
+
+        textarea.field::placeholder {
+            width: 216px;
+            height: 16px;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-size: 16px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1;
+            letter-spacing: -0.96px;
+            text-align: left;
+            color: #868e96;
+        }
+
+        .card {
+            width: 538px;
+            border-radius: 5px;
+            background-color: #ffffff;
+            margin-bottom: 12px;
+            position: relative;  /* 댓글 영역과 겹치지 않도록 */
+        }
+
+        .card .metadata {
+            position: relative;
+            display: flex;
+            font-family: 'Spoqa Han Sans';
+            font-size: 11px;
+            font-weight: normal;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1;
+            letter-spacing: -0.77px;
+            text-align: left;
+            color: #adb5bd;
+            height: 14px;
+            padding: 10px 23px;
+        }
+
+        .card .metadata .date {
+
+        }
+
+        .card .metadata .username {
+            margin-left: 20px;
+        }
+
+        .contents {
+            padding: 0px 23px;
+            word-wrap: break-word;
+            word-break: break-all;
+        }
+
+        .contents div.edit {
+            display: none;
+        }
+
+        .contents textarea.te-edit {
+            border-right: none;
+            border-top: none;
+            border-left: none;
+            resize: none;
+            border-bottom: 1px solid #212529;
+            width: 100%;
+            font-family: 'Spoqa Han Sans';
+        }
+
+        .footer {
+            position: relative;
+            height: 40px;
+        }
+
+        .footer img.icon-start-edit {
+            cursor: pointer;
+            position: absolute;
+            bottom: 14px;
+            right: 55px;
+            width: 18px;
+            height: 18px;
+        }
+
+        .footer img.icon-end-edit {
+            cursor: pointer;
+            position: absolute;
+            display: none;
+            bottom: 14px;
+            right: 55px;
+            width: 20px;
+            height: 15px;
+        }
+
+        .footer img.icon-delete {
+            cursor: pointer;
+            position: absolute;
+            bottom: 12px;
+            right: 19px;
+            width: 14px;
+            height: 18px;
+        }
+
+        #cards-box {
+            position: relative;     /* 이건 원래 없었음 */
+            margin-top: 12px;       /* 수정함, 원래 값 12px */
+        }
+        #login-text {
+            position:absolute;
+            top:48px;
+            right:50px;
+            font-size: 18px;
+            font-family: 'Spoqa Han Sans';
+            font-size: 18px;
+            font-weight: 500;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1;
+            letter-spacing: 0.36px;
+            text-align: center;
+            color: #ffffff;
+        }
+        #login-text1 {
+            position:absolute;
+            top:48px;
+            right:200px;
+            font-size: 18px;
+            font-family: 'Spoqa Han Sans';
+            font-size: 18px;
+            font-weight: 500;
+            font-stretch: normal;
+            font-style: normal;
+            line-height: 1;
+            letter-spacing: 0.36px;
+            text-align: center;
+            color: #ffffff;
+        }
+        /* ------------------------------ 댓글 영역 스타일 -------------------------------*/
+        .comments-area{
+            margin-top: 10px;
+            padding-top: 10px;              /* 댓글 영역 위쪽 간격 */
+            border-top: 1px solid #ced4da;  /* 댓글 영역 위에 구분선 추가 */
+        }
+
+        .comments h2 {
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .comment-field {
+            width: calc(100% - 20px);       /* 왼쪽 오른쪽 여백 제거, 디폴트값 100%*/
+            height: 80px;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 5px;
+            resize: none;
+        }
+
+        .comment-field::placeholder {
+            color: #868e96;
+        }
+
+        .comments img {
+            cursor: pointer;
+            width: 22px;
+            height: 22px;
+        }
+    </style>
+    <script type="text/javascript">
+        const host = 'http://' + window.location.host;
+        // -------------------------------------- 토큰 시작 ---------------------------------
+        $(document).ready(function () {
+            const auth = getToken();
+
+            if (auth !== undefined && auth !== '') {
+                $.ajaxPrefilter(function (options, originalOptions, jqXHR) {
+                    jqXHR.setRequestHeader('Authorization', auth);
+                });
+            } else {
+                window.location.href = host + '/api/user/login-page';
+                return;
+            }
+
+            $.ajax({
+                type: 'GET',
+                //  url: `/`,
+                url: `/api/user-info`,
+                contentType: 'application/json',
+            })
+                .done(function (res, status, xhr) {
+                    const username = res.username;
+                    const isAdmin = !!res.admin;
+
+                    if (!username) {    // 사용자 명이 없으면 로그인 페이지로 리디렉션
+                        window.location.href = host + '/api/user/login-page';
+                        return;
+                    }
+                    // '내 프로필' 링크 클릭 이벤트 처리
+                    $('#login-text1').on('click', function(event) {
+                        event.preventDefault(); // 링크의 기본 동작(페이지 이동)을 방지
+                        window.location.href = host + '/user-info'; // 사용자 프로필 페이지로 이동
+                    });
+
+                    // $('#username').text(username);  // html에 사용자 정보 표시
+                    // if (isAdmin) {
+                    //     $('#admin').text(true);
+                    //     showUserinfo(true);
+                    // } else {
+                    //     showUserinfo();     // 관리자 아닌 경우 기본 사용자 정보만 표시
+                    // }
+                })
+                .fail(function (jqXHR, textStatus) {
+                    logout();       // AJAX 요청 실패 시 로그아웃
+                });
+        })
+        //-------------------------------- 토큰 끝 --------------------------------
+
+        // ------------------------------- 게시글 시작 -----------------------------------
+
+        // 사용자가 내용을 올바르게 입력하였는지 확인합니다.
+        function isValidContents(contents) {
+            if (contents == '') {
+                alert('내용을 입력해주세요');
+                return false;
+            }
+            // if (contents.trim().length > 140) {
+            //     alert('공백 포함 140자 이하로 입력해주세요');
+            //     return false;
+            // }
+            return true;
+        }
+
+        // 수정 버튼을 눌렀을 때, 기존 작성 내용을 textarea 에 전달합니다.
+        // 숨길 버튼을 숨기고, 나타낼 버튼을 나타냅니다.
+        function editPost(id) {
+            showEdits(id);
+            let contents = $(`#${id}-contents`).text().trim();
+            $(`#${id}-textarea`).val(contents);
+        }
+
+        function showEdits(id) {
+            $(`#${id}-editarea`).show();
+            $(`#${id}-submit`).show();
+            $(`#${id}-delete`).show();
+
+            $(`#${id}-contents`).hide();
+            $(`#${id}-edit`).hide();
+        }
+
+        $(document).ready(function () {
+            // HTML 문서를 로드할 때마다 실행합니다.
+            getMessages();
+        })
+
+        // 메모를 불러와서 보여줍니다.
+        function getMessages() {
+            // 1. 기존 메모 내용을 지웁니다.
+            $('#cards-box').empty();
+            // 2. 메모 목록을 불러와서 HTML로 붙입니다.
+            $.ajax({
+                type: 'GET',
+                url: '/api/boards',
+                success: function (response) {
+                    for (let i = 0; i < response.length; i++) {
+                        let message = response[i];
+                        let id = message['id'];
+                        let username = message['username'];
+                        let contents = message['contents'];
+                        let modifiedAt = message['modifiedAt'];
+                        addHTML(id, username, contents, modifiedAt);
+                    }
+                }
+            })
+        }
+
+        // 메모 하나를 HTML로 만들어서 body 태그 내 원하는 곳에 붙입니다.
+        function addHTML(id, username, contents, modifiedAt, comments) {
+            // 1. HTML 태그를 만듭니다.
+            let tempHtml = `<div class="card">
+                <!-- date/username 영역 -->
+                <div class="metadata">
+                    <div class="date">
+                        ${modifiedAt}
+                    </div>
+                    <div id="${id}-username" class="username">
+                        ${username}
+                    </div>
+                </div>
+                <!-- contents 조회/수정 영역-->
+                <div class="contents">
+                    <div id="${id}-contents" class="text">
+                        ${contents}
+                    </div>
+                    <div id="${id}-editarea" class="edit">
+                        <textarea id="${id}-textarea" class="te-edit" name="" id="" cols="30" rows="5"></textarea>
+                    </div>
+                </div>
+                <!-- 버튼 영역-->
+                <div class="footer">
+                    <img id="${id}-edit" class="icon-start-edit" src="../static/images/edit.png" alt="" onclick="editPost('${id}')">
+                    <img id="${id}-delete" class="icon-delete" src="../static/images/delete.png" alt="" onclick="deleteOne('${id}')">
+                    <img id="${id}-submit" class="icon-end-edit" src="../static/images/done.png" alt="" onclick="submitEdit('${id}')">
+                </div>
+            </div>`;
+
+            // 2. #cards-box에 HTML을 붙인다.
+            $('#cards-box').append(tempHtml);
+
+            // 댓글을 불러오고 추가하는 함수 호출
+            getComments(id, comments);
+        }
+
+        // 메모를 생성합니다.
+        function writePost() {
+            // 1. 작성한 메모를 불러옵니다.
+            let contents = $('#contents').val();
+
+            // 2. 작성한 메모가 올바른지 isValidContents 함수를 통해 확인합니다.
+            if (isValidContents(contents) == false) {
+                return;
+            }
+            // 3. 서버로부터 현재 username을 가져옵니다.
+            $.ajax({
+                type: "GET",
+                url: "/api/user-info",
+                contentType: "application/json",
+                success: function (userResponse) {
+                    // 4. 현재 사용자의 username을 가져옵니다
+                    let username = userResponse.username;
+
+                    // 5. 전달할 data JSON으로 만듭니다.
+                    let data = {'username': username, 'contents': contents};
+
+                    // 6. POST /api/boards에 data 전달
+                    $.ajax({
+                        type: "POST",
+                        url: "/api/boards",
+                        contentType: "application/json",
+                        data: JSON.stringify(data),
+                        success: function(response) {
+                            alert("오늘의 야옹타임 작성 완료!");
+                            window.location.reload();
+                        }
+                    });
+                },
+                // 에러 처리 로직 추가
+                error: function (error) {
+                    console.error("사용자 정보를 가져오는데 실패했습니다.");
+                }
+            });
+        }
+
+        // 메모를 수정합니다.
+        function submitEdit(id) {
+            // 1. 작성 대상 메모의 username과 contents 를 확인합니다.
+            let username = $(`#${id}-username`).text().trim();
+            let contents = $(`#${id}-textarea`).val().trim();
+
+            // 2. 작성한 메모가 올바른지 isValidContents 함수를 통해 확인합니다.
+            if (isValidContents(contents) == false) {
+                return;
+            }
+
+            // 3. 전달할 data JSON으로 만듭니다.
+            let data = {'username': username, 'contents': contents};
+
+            // 4. PUT /api/boards/{id} 에 data를 전달합니다.
+            $.ajax({
+                type: "PUT",
+                url: `/api/boards/${id}`,
+                contentType: "application/json",
+                data: JSON.stringify(data),
+                success: function (response) {
+                    alert('메세지 수정에 성공하였습니다!');
+                    window.location.reload();
+                }
+            });
+        }
+
+        // 메모를 삭제합니다.
+        function deleteOne(id) {
+            // 1. DELETE /api/boards/{id} 에 요청해서 메모를 삭제합니다.
+            $.ajax({
+                type: "DELETE",
+                url: `/api/boards/${id}`,
+                success: function (response) {
+                    alert('메시지 삭제에 성공하였습니다.');
+                    window.location.reload();
+                }
+            })
+        }
+        // ----------------------------------------- 댓글 시작 --------------------------------
+        // 댓글을 불러오고 추가하는 함수
+        function getComments(id, comments) {
+            let commentList = $(`#${id}-comments`);
+            commentList.empty();    // 기존 댓글 내용을 지움
+
+            // comments가 존재하면 각각의 댓글을 HTML로 추가
+            if (comments && comments.length > 0) {
+                for (let i = 0; i < comments.length; i++) {
+                    let comment = comments[i];
+                    commentList.append(`<div class="comments-area">${comment.user.username}: ${comment.contents}</div>`)
+                }
+            }
+        }
+
+        // 댓글을 작성하는 함수
+        function writeComment(id) {
+            let commentInput = $(`#${id}-comments`);
+            let commentContents = commentInput.val().trim();
+
+            if (commentContents == '') {
+                alert('댓글 내용을 입력해주세요.');
+                return;
+            }
+
+            // 전달할 데이터를 JSON 으로 만듦
+            let data = {'username' : 'anonymous', 'contents' : commentContents};
+
+            // POST /api/comment/{id} 에 데이터를 전달
+            $.ajax({
+                type: 'POST',
+                url: `/api/comment/${id}`,
+                contentType: 'application/json',
+                data: JSON.stringify(data),
+                success: function (response) {
+                    alert('댓글이 성공적으로 작성되었다냥!');
+                    commentInput.val('');   // 댓글 입력창 다시 비우기
+                    // 댓글을 다시 불러와서 화면에 갱신
+                    getComments(id, response.comments);
+                },
+                error: function (error) {
+                    console.error('댓글 작성 중 오류:', error);
+                }
+            });
+        }
+        // -------------------------------- 사진 업로드 시작 --------------------------
+        document.getElementById("file").addEventListener("change", uploadResource);
+        document.getElementById("remove").addEventListener("click", removeResource);
+
+        function uploadResource() {
+            const file = document.getElementById("file");
+            const formData = new FormData();
+            formData.append("file", file.files[0]);
+
+            fetch("/api/resource", {
+                method : "POST"
+                , body : formData
+            })
+                .then(result => result.json())
+                .then(data => {
+                    document.getElementById("img").setAttribute("src", data.path);
+                    document.getElementById("remove").setAttribute("key", data.key)
+                })
+                .catch(error => console.log(`error => ${error}`));
+        }
+        function removeResource() {
+            const key = document.getElementById("remove").getAttribute("key");
+            if (!key) {
+                return;
+            }
+            const formData = new FormData();
+            formData.append("key", key);
+
+            fetch("/api/resource", {
+                method : "DELETE"
+                , body : formData
+            })
+                .then(result => {
+                    if (result.ok && result.status === 200) {
+                        alert("해당 이미지가 삭제되었습니다.");
+                        document.getElementById("img").removeAttribute("src");
+                    }
+                })
+                .catch(error => console.log(`error => ${error}`));
+        }
+        //---------------------------------사진 업로드 끝 ------------------------------
+        //---------------------------------- 게시글 끝 -----------------------------------
+        function logout() {
+            // 토큰 삭제
+            Cookies.remove('Authorization', {path: '/'});
+            window.location.href = host + '/api/user/login-page';
+        }
+
+        function getToken() {
+            let auth = Cookies.get('Authorization');
+
+            if (auth === undefined) {
+                return '';
+            }
+
+            // 카카오 로그인 사용한 경우 Bearer 추가
+            if(auth.indexOf('Bearer') === -1 && auth !== ''){
+                auth = 'Bearer ' + auth;
+            }
+
+            return auth;
+        }
+        // ---------------------------- 모달 창 시작 -------------------------
+        // 메모를 클릭하면 해당 메모의 세부 정보를 보여주는 함수
+        function showMemoDetails(id) {
+            // 메모의 세부 정보를 가져오는 AJAX 요청
+            $.ajax({
+                type: 'GET',
+                url: `/api/boards/${id}`,
+                success: function (response) {
+                    // 세부 정보를 모달에 표시
+                    $('#memoDetailsTitle').text(response.username + '님의 오늘 고양이와의 순간');
+                    $('#memoDetailsContents').text(response.contents);
+                    $('#memoDetailsModal').modal('show'); // 모달 창 열기
+                },
+                error: function (error) {
+                    console.error('메모 세부 정보를 불러오는 동안 오류가 발생했습니다:', error);
+                }
+            });
+        }
+    </script>
+</head>
+
+<body>
+<div class="background-header">
+
+</div>
+<div class="background-body">
+
+</div>
+<div class="wrap">
+    <div class="header">
+        <h2>🐱Meow Time🐱</h2>
+        <p>
+            공유하고 싶은 오늘 고양이와의 순간
+        </p>
+        <a id="login-text1" href="/api/user-info">
+            내 프로필 <!-- 클릭 시 프로필 화면과 내가 쓴 글이 모여져있도록 만들자 -->
+        </a>
+        <a id="login-text" href="javascript:logout()">
+            로그아웃
+        </a>
+    </div>
+    <div class="area-write">
+        <textarea class="field" placeholder="공유하고 싶은 오늘의 고양이 모먼트" name="contents" id="contents" cols="30"
+                  rows="10"></textarea>
+        <!-- 사진 업로드 영역 -->
+        <div style="height: 50px;">
+            <input type="file" id="file" style="display: none;">
+            <label for="file" style="color: blue;cursor: pointer">업로드</label>
+            <input type="button" id="remove" style="display: none;">
+            <label for="remove" style="color: red;cursor: pointer">삭제</label>
+        </div>
+        <div>
+            <img id="img"/>
+        </div>
+        <!-- 사진 업로드 영역 끝 -->
+        <!--            <button class="btn btn-danger" onclick="writePost()">작성하기</button>-->
+        <img src="../static/images/send.png" alt="" onclick="writePost()">
+    </div>
+    <div id="cards-box" class="area-read">
+        <!-- 카드 영역 -->
+        <div class="card" onclick="showMemoDetails('${id}')"> <!-- 메모 아이디를 인자로 전달 -->
+            <!-- date/username 영역 -->
+            <div class="metadata">
+                <div class="date">
+                    October 10, 2020
+                </div>
+                <div class="username">
+                    anonymous
+                </div>
+            </div>
+            <!-- contents 조회/수정 영역-->
+            <div class="contents">
+
+            </div>
+            <!-- 버튼 영역-->
+            <div class="footer">
+                <img id="1-edit" class="icon-start-edit" src="../static/images/edit.png" alt="" onclick="editPost('1')">
+                <img id="1-delete" class="icon-delete" src="../static/images/delete.png" alt="" onclick="deleteOne('1')">
+                <img id="1-submit" class="icon-end-edit" src="../static/images/done.png" alt="" onclick="submitEdit('1')">
+            </div>
+        </div>
+
+
+    </div>
+</div>
+</body>
+
+</html>

@@ -8,7 +8,6 @@ import com.sparta.newsfeed.util.GlobalResponse.GlobalResponseDto;
 import com.sparta.newsfeed.util.GlobalResponse.ResponseUtil;
 import com.sparta.newsfeed.util.GlobalResponse.code.StatusCode;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -31,14 +30,21 @@ public class BoardController {
         return ResponseUtil.response(boardService.getBoards());
     }
 
-    // 글 쓰기
-    @PostMapping(value = "/boards", consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE})
-    public ResponseEntity<BoardResponseDto> createBoard(@RequestPart(value = "data") BoardRequestDto requestDto,
-                                                        @RequestPart(value = "file", required = false) List<MultipartFile> multipartFilelist,
+    // 글 쓰기 (글)
+    @PostMapping(value = "/boards/contents")
+    public ResponseEntity<BoardResponseDto> createBoard(@RequestBody BoardRequestDto requestDto,
                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        log.info("글쓰기");
-        return ResponseUtil.response(boardService.createBoard(requestDto, multipartFilelist, userDetails.getUser()));
+        log.info("글(찐) 쓰기");
+        return ResponseUtil.response(boardService.createBoardContents(requestDto, userDetails.getUser()));
     }
+
+    // 글 쓰기 (이미지)
+    // @PostMapping(value = "/boards/images", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+// public ResponseEntity<BoardResponseDto> createBoard(@RequestPart(value = "file", required = false) List<MultipartFile> multipartFilelist,
+// @AuthenticationPrincipal UserDetailsImpl userDetails) {
+// log.info("글(이미지) 쓰기");
+// return ResponseUtil.response(boardService.createBoardImages(multipartFilelist, userDetails.getUser()));
+// }
 
     // 글 상세 보기
     @GetMapping("/boards/{id}")

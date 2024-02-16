@@ -27,7 +27,7 @@ public class Board extends Timestamped {
     private String contents;
 
     @Column
-    private String name;                             // 작성자 닉네임
+    private String username;                             // 작성자 아이디
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)     // 연관된 이미지 파일 정보, cascade로 함께 삭제되도록 설정
     private List<ImageFile> imageFileList = new ArrayList<>();
@@ -45,7 +45,7 @@ public class Board extends Timestamped {
     public Board(BoardRequestDto requestDto, User user) {
         this.contents = requestDto.getContents();
         this.user = user;
-        this.name = name;
+        this.username = user.getUsername();
     }
 
     // 업데이트
