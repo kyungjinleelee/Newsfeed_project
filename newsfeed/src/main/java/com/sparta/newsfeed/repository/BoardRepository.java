@@ -20,4 +20,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Transactional
     void deleteAllByUser(User user);    // 해당 유저가 작성한 글 모두 삭제
     boolean existsByUser(User user);    // 해당 유저가 작성한 글 존재여부 확인
+
+    // 팔로우 한 유저 글 보기 관련
+    List<Board> findByUserIn(List<User> followings);
 }

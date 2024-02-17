@@ -35,6 +35,15 @@ public class UserInfoController {
         return new UserInfoDto(username, name, email, isAdmin);
     }
 
+    // 회원 정보 조회
+    @GetMapping("/user/info")
+    public String getUserInfo() {
+        log.info("회원 정보 뷰");
+        return "user-info";
+    }
+
+
+
 //    @GetMapping("/user-info")
 //    public String getUserInfo(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
 //        log.info("회원 정보 불러오는 시도");

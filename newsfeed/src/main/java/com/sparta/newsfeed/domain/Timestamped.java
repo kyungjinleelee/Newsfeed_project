@@ -28,22 +28,4 @@ public abstract class Timestamped {
     @Temporal(TemporalType.TIMESTAMP)
     private LocalDateTime modifiedAt;
 
-//    @CreatedDate
-//    @Column(updatable = false)
-//    private LocalDate createdAt;
-//
-//    @LastModifiedDate
-//    @Column
-//    private LocalDate modifiedAt;
-//
-//    @PrePersist
-//    public void onPrePersist() {
-//        this.createdAt = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-//        this.modifiedAt = this.createdAt;
-//    }
-//
-//    @PreUpdate
-//    public void onPreUpdate() {
-//        this.modifiedAt = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmss"));
-//    }
 }
