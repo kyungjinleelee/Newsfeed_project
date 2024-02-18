@@ -34,7 +34,6 @@ public class BoardController {
     @PostMapping(value = "/boards/contents")
     public ResponseEntity<BoardResponseDto> createBoard(@RequestBody BoardRequestDto requestDto,
                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        log.info("글(찐) 쓰기");
         return ResponseUtil.response(boardService.createBoardContents(requestDto, userDetails.getUser()));
     }
 

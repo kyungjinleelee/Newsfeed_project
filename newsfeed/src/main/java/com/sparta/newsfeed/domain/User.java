@@ -1,5 +1,9 @@
 package com.sparta.newsfeed.domain;
 
+import com.sparta.newsfeed.dto.RequestDto.PwdUpdateDto;
+import com.sparta.newsfeed.dto.RequestDto.SignupRequestDto;
+import com.sparta.newsfeed.util.GlobalResponse.CustomException;
+import com.sparta.newsfeed.util.GlobalResponse.code.StatusCode;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +26,7 @@ public class User {
     private String password; // 로그인용 패스워드
 
  //   @Column(nullable = false)
-    private String name;     // 이름
+    private String name;     // 닉네임
 
     @Column(nullable = false, unique = true)
     private String email;    // 이메일
@@ -30,8 +34,8 @@ public class User {
     @Column
     private String description; // 한 줄 소개
 
-    @Lob
-    private byte[] profile_image;   // 프로필 이미지
+    @Column
+    private String profileImg;   // 프로필 이미지
 
     @Column(nullable = false)
     // @Enumerated: EnumType을 DB컬럼에 저장할 때 사용
@@ -72,4 +76,16 @@ public class User {
         return this;
     }
 
+    // 닉네임 수정
+    public void update(SignupRequestDto signupRequestDto) {
+        this.name = signupRequestDto.getName();
+    }
+
+    // 비밀번호 수정
+    public void updatePwd(PwdUpdateDto pwdUpdateDto) {
+        if (!this.id.equals(pwdUpdateDto.getId()))
+            throw new CustomException(StatusCode.USERID_MATCH_FAIL);
+
+        this.password = pwdUpdateDto.getNewPwd();
+    }
 }

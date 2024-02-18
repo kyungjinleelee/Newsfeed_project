@@ -1,38 +1,110 @@
 package com.sparta.newsfeed.service;
 
+import com.sparta.newsfeed.domain.PwdHistory;
+import com.sparta.newsfeed.domain.User;
+import com.sparta.newsfeed.domainModel.UserQuery;
+import com.sparta.newsfeed.dto.RequestDto.PwdUpdateDto;
+import com.sparta.newsfeed.dto.RequestDto.SignupRequestDto;
+import com.sparta.newsfeed.dto.ResponseDto.PrivateResponseBody;
+import com.sparta.newsfeed.repository.HistoryRepository;
 import com.sparta.newsfeed.repository.UserRepository;
+import com.sparta.newsfeed.util.GlobalResponse.CustomException;
+import com.sparta.newsfeed.util.GlobalResponse.code.StatusCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
+// 기능 : 회원 정보 Service
 @Service
 @RequiredArgsConstructor
 @Slf4j
 public class UserInfoService {
+    private final UserQuery userQuery;
     private final UserRepository userRepository;
+    private final HistoryRepository historyRepository;
     private final PasswordEncoder passwordEncoder;
 
-    // 기본 정보 조회
-//   public UserResponseDto findUser(String username){
-//       User user = userRepository.findByEmail(email).orElseThrow(() -> new IllegalArgumentException("이메일이 존재하지 않습니다."));
-//   }
+    // 닉네임 변경
+    @Transactional
+    public PrivateResponseBody changeName(SignupRequestDto signupRequestDto, User user) {
 
-//    public void userInfo(UserInfoDto userInfoDto) {
-//        Long id = userInfoDto.getId();
-//        String username = userInfoDto.getUsername();
-//        String name = userInfoDto.getName();
-//        String description = userInfoDto.getDescription();
-//        byte[] profile_image = userInfoDto.getProfile_image();
-//
-//        // 회원 정보 조회
-//        Optional<User> findByUsername = userRepository.findByUsername(username);
-//    }
+        User user1 = userQuery.findUserById(user.getId());
 
-    // 기본 프로필 수정
-//    @Transactional
-//    public UserRequestDto updateUserinfo(Long id, UserRequestDto updateDto) {
-//
-//    }
+        if(user.getId().equals(user1.getId())){
+            user1.update(signupRequestDto);
+            return new PrivateResponseBody<>(StatusCode.OK,"닉네임 변경 완료");
+        } else {
+            throw new CustomException(StatusCode.LOGIN_MATCH_FAIL);
+        }
+    }
 
+    // 비밀번호 수정
+    @Transactional
+    public PwdUpdateDto updatePwd(Long id, PwdUpdateDto pwdUpdateDto) {
+
+        pwdUpdateDto.setId(id);                     // userid
+        String oldPwd = pwdUpdateDto.getOldPwd();   // 현재 비밀번호 입력
+
+        User target = userRepository.findById(id)
+                .orElseThrow(() ->
+                        new CustomException(StatusCode.NOT_FOUND_USER)
+                );
+
+        // 기존 등록된 비밀번호와 현재 비밀번호 입력값이 일치하는지 확인
+        String currentPwd = target.getPassword();
+
+        if(!passwordEncoder.matches(oldPwd, currentPwd)) {
+            throw new CustomException(StatusCode.PWD_MATCH_FAIL);
+        }
+
+        // =============== 최근 3번 안에 사용한 비밀번호 사용할 수 없도록 하는 로직 ============
+        // 1. 패스워드 최근 3개 조회 + 새로운 비밀번호와 일치 여부
+        List<PwdHistory> pwds = showPwd(id);
+        String newPwd = pwdUpdateDto.getNewPwd();
+
+        boolean newPasswordValid = pwds
+                .stream()
+                .noneMatch(history -> passwordEncoder.matches(newPwd, history.getOldPwd()));
+
+        if (newPasswordValid) {
+            // 2. 패스워드 수정 전에 히스토리 저장
+            saveHistory(target, currentPwd);
+
+            // 패스워드 수정
+            pwdUpdateDto.setNewPwd(passwordEncoder.encode(newPwd));
+            target.updatePwd(pwdUpdateDto);
+
+            // 3. 새로운 비밀번호로 업데이트
+            User updated = userRepository.save(target);
+
+            // Entity -> Dto
+            return PwdUpdateDto.create(updated);
+        } else {
+            throw new CustomException(StatusCode.RECENT_PASSWORD_USED);
+        }
+        // ======================= 로직 끝 ========================
+    }
+
+    // 한 줄 소개 수정
+
+
+    // ======================== 메서드 ===========================
+    // 비밀번호 최근 3개 조회
+    private List<PwdHistory> showPwd(Long id) {
+        List<PwdHistory> passwords = historyRepository.findByUserId(id);
+        return passwords;
+    }
+
+    // 비밀번호 히스토리 테이블에 저장
+    @Transactional
+    public void saveHistory(User user, String password) {
+        PwdHistory history = new PwdHistory();
+        history.setUser(user);
+        history.setOldPwd(password);
+        historyRepository.save(history);
+    }
 }

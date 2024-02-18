@@ -13,15 +13,14 @@ public class SignupRequestDto {
     private String username;
 
     @NotBlank(message = "비밀번호는 필수 입력 값입니다.")
- //   @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\\\d)(?=.*[$@$!%*#?&])[A-Za-z\\\\d$@$!%*#?&]{8,16}$", message = "비밀번호는 8~16자 알파벳 대소문자, 숫자, 특수문자를 사용하세요.")
-
+//    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$^!%*#?&])[A-Za-z\\d$@$^!%*#?&]{8,15}$", message = "비밀번호는 알파벳 대소문자, 숫자, 특수문자를 포함하여 8~15자여야 합니다.")
     private String password;
 
     @NotBlank
     private String name;
 
     @Pattern(regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
-    @NotBlank
+    @NotBlank(message = "이메일은 필수 입력 값입니다.")
     private String email;
     private boolean admin = false;      // admin인지 아닌지 확인 (기본값은 false)
     private String adminToken = "";     // adminToken 기본값은 공백

@@ -1,17 +1,26 @@
 package com.sparta.newsfeed.controller;
 
-import com.sparta.newsfeed.dto.UserInfoDto;
 import com.sparta.newsfeed.domain.UserRoleEnum;
+import com.sparta.newsfeed.dto.RequestDto.PwdUpdateDto;
+import com.sparta.newsfeed.dto.RequestDto.SignupRequestDto;
+import com.sparta.newsfeed.dto.ResponseDto.PrivateResponseBody;
+import com.sparta.newsfeed.dto.UserInfoDto;
 import com.sparta.newsfeed.security.UserDetailsImpl;
 import com.sparta.newsfeed.service.UserInfoService;
 import com.sparta.newsfeed.service.UserService;
+import com.sparta.newsfeed.util.GlobalResponse.ResponseUtil;
+import com.sparta.newsfeed.util.GlobalResponse.code.StatusCode;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/api")
@@ -21,6 +30,13 @@ public class UserInfoController {
 
     private final UserInfoService userInfoService;
     private final UserService userService;
+
+    // 회원 정보 페이지 이동
+    @GetMapping("/user/info")
+    public String getUserInfo() {
+        log.info("회원 정보 뷰");
+        return "user-info";
+    }
 
     // 회원 정보 조회
     @GetMapping("/user-info")
@@ -35,12 +51,36 @@ public class UserInfoController {
         return new UserInfoDto(username, name, email, isAdmin);
     }
 
-    // 회원 정보 조회
-    @GetMapping("/user/info")
-    public String getUserInfo() {
-        log.info("회원 정보 뷰");
-        return "user-info";
+    // 닉네임 변경
+    @PutMapping("/user-info/changeName")
+    public ResponseEntity<PrivateResponseBody> changeName(@RequestBody SignupRequestDto signupRequestDto,
+                                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseUtil.response(userInfoService.changeName(signupRequestDto, userDetails.getUser()));
     }
+
+    // 비밀번호 수정
+    @PutMapping("/user-info/{id}")      // userid
+    public ResponseEntity<PrivateResponseBody> updatePwd(@PathVariable Long id,
+                                                         @RequestBody @Valid PwdUpdateDto pwdUpdateDto,
+                                                         BindingResult bindingResult) {
+        // Validation 예외 처리
+        // 유효성 통과 못한 필드와 메세지를 핸들링
+        if (bindingResult.hasErrors()) {
+            List<String> errorMessage = bindingResult.getAllErrors()
+                    .stream()
+                    .map(error -> error.getDefaultMessage())
+                    .collect(Collectors.toList());
+            // 에러 메세지를 포함한 PrivateResponseBody 생성
+            PrivateResponseBody response = new PrivateResponseBody(StatusCode.BAD_REQUEST, errorMessage);
+
+            return ResponseUtil.response(response);
+        }
+        // 비밀번호 업데이트
+        userInfoService.updatePwd(id, pwdUpdateDto);
+
+        return ResponseUtil.response(StatusCode.PWD_UPDATE_OK);
+    }
+
 
 
 
