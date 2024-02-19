@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
+
 @Controller
 @RequestMapping("/api")
 @Slf4j(topic = "회원 정보 컨트롤러")
@@ -58,45 +59,47 @@ public class UserInfoController {
         return ResponseUtil.response(userInfoService.changeName(signupRequestDto, userDetails.getUser()));
     }
 
+    // 한 줄 소개 수정
+    @PutMapping("/user-info/changeDescription")
+    public ResponseEntity<PrivateResponseBody> changeDescription(@RequestBody SignupRequestDto signupRequestDto,
+                                                                 @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseUtil.response(userInfoService.changeDescription(signupRequestDto, userDetails.getUser()));
+    }
+
+//    // 프로필 이미지 수정
+//    @PutMapping("/user-info/changeImg")
+//    public ResponseEntity<PrivateResponseBody> changeProfileImg(@RequestPart(value = "file")MultipartFile file,
+//                                                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        return ResponseUtil.response(userInfoService.updateProfileImg(file, userDetails.getUser()));
+//
+//    }
+
     // 비밀번호 수정
     @PutMapping("/user-info/{id}")      // userid
     public ResponseEntity<PrivateResponseBody> updatePwd(@PathVariable Long id,
-                                                         @RequestBody @Valid PwdUpdateDto pwdUpdateDto,
-                                                         BindingResult bindingResult) {
+                                                     @RequestBody @Valid PwdUpdateDto pwdUpdateDto,
+                                                     BindingResult bindingResult) {
         // Validation 예외 처리
         // 유효성 통과 못한 필드와 메세지를 핸들링
         if (bindingResult.hasErrors()) {
-            List<String> errorMessage = bindingResult.getAllErrors()
+            List<String> errorMessages = bindingResult.getAllErrors()
                     .stream()
                     .map(error -> error.getDefaultMessage())
                     .collect(Collectors.toList());
-            // 에러 메세지를 포함한 PrivateResponseBody 생성
-            PrivateResponseBody response = new PrivateResponseBody(StatusCode.BAD_REQUEST, errorMessage);
 
+            // 에러 메세지를 포함한 PrivateResponseBody 생성
+            PrivateResponseBody response = new PrivateResponseBody(StatusCode.PWD_UPDATE_FAIL, errorMessages);
             return ResponseUtil.response(response);
         }
         // 비밀번호 업데이트
         userInfoService.updatePwd(id, pwdUpdateDto);
 
-        return ResponseUtil.response(StatusCode.PWD_UPDATE_OK);
+        PrivateResponseBody response = new PrivateResponseBody(StatusCode.OK, "비밀번호 수정 완료.");
+        return ResponseUtil.response(response);
     }
 
 
 
 
-//    @GetMapping("/user-info")
-//    public String getUserInfo(Model model, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        log.info("회원 정보 불러오는 시도");
-//        String username = userDetails.getUser().getUsername();
-//        String name = userDetails.getUser().getName();
-//        String email = userDetails.getUser().getEmail();
-//        UserRoleEnum role = userDetails.getUser().getRole();
-//        boolean isAdmin = (role == UserRoleEnum.ADMIN);
-//
-////        UserInfoDto user = UserInfoService.findUser(userDetails.getUsername());
-//        UserInfoDto userInfoDto = new UserInfoDto(username, name, email, isAdmin);
-//        model.addAttribute("userInfo", userInfoDto);
-//
-//        return "userInfo";
-//    }
+
 }

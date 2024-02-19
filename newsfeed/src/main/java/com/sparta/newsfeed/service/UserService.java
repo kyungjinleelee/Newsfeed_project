@@ -51,8 +51,11 @@ public class UserService {
         // 이름
         String name = requestDto.getName();
 
+        // 상태
+        String status = requestDto.getStatus();
+
         // 사용자 등록
-        User user = new User(username, password, name, email, role);    // 객체 세팅
+        User user = new User(username, password, name, email, status, role);    // 객체 세팅
         userRepository.save(user);
     }
 

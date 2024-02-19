@@ -8,6 +8,7 @@ import com.sparta.newsfeed.dto.RequestDto.SignupRequestDto;
 import com.sparta.newsfeed.dto.ResponseDto.PrivateResponseBody;
 import com.sparta.newsfeed.repository.HistoryRepository;
 import com.sparta.newsfeed.repository.UserRepository;
+import com.sparta.newsfeed.s3.AwsS3Uploader;
 import com.sparta.newsfeed.util.GlobalResponse.CustomException;
 import com.sparta.newsfeed.util.GlobalResponse.code.StatusCode;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class UserInfoService {
     private final UserRepository userRepository;
     private final HistoryRepository historyRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AwsS3Uploader awsS3Uploader;
 
     // 닉네임 변경
     @Transactional
@@ -41,6 +43,20 @@ public class UserInfoService {
             throw new CustomException(StatusCode.LOGIN_MATCH_FAIL);
         }
     }
+
+    // 한 줄 소개 수정
+    @Transactional
+    public PrivateResponseBody changeDescription(SignupRequestDto signupRequestDto, User user) {
+        User user1 = userQuery.findUserById(user.getId());
+
+        if(user.getId().equals(user1.getId())) {
+            user1.updateDescription(signupRequestDto);
+            return new PrivateResponseBody<>(StatusCode.OK, "한줄소개 수정 완료");
+        } else {
+            throw new CustomException(StatusCode.LOGIN_MATCH_FAIL);
+        }
+    }
+
 
     // 비밀번호 수정
     @Transactional
@@ -89,9 +105,6 @@ public class UserInfoService {
         // ======================= 로직 끝 ========================
     }
 
-    // 한 줄 소개 수정
-
-
     // ======================== 메서드 ===========================
     // 비밀번호 최근 3개 조회
     private List<PwdHistory> showPwd(Long id) {
@@ -107,4 +120,5 @@ public class UserInfoService {
         history.setOldPwd(password);
         historyRepository.save(history);
     }
+
 }

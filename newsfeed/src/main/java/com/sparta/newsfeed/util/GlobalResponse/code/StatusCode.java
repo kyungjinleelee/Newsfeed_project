@@ -14,6 +14,7 @@ public enum StatusCode {
     USERID_MATCH_FAIL(HttpStatus.NOT_FOUND, "404", "요청 USER ID가 잘못 입력되었습니다."),
     NOT_FOUND_USER(HttpStatus.NOT_FOUND, "404", "회원을 찾을 수 없습니다."),
     PWD_MATCH_FAIL(HttpStatus.BAD_REQUEST,"400", "비밀번호가 일치하지 않습니다."),
+    PWD_UPDATE_FAIL(HttpStatus.BAD_REQUEST, "400", "비밀번호 수정에 실패했습니다." ),
     RECENT_PASSWORD_USED(HttpStatus.BAD_REQUEST, "400", "최근 3번 안에 사용한 비밀번호는 사용할 수 없습니다."),
     FILE_DELETE_FAILED(HttpStatus.NOT_FOUND, "404", "파일 삭제 실패"),
     FILE_CONVERT_FAILED(HttpStatus.NOT_FOUND, "404", "파일 전환 실패"),
@@ -30,6 +31,7 @@ public enum StatusCode {
     DELETE_OK(HttpStatus.OK, "200", "삭제 성공했습니다."),
     LIKE_OK(HttpStatus.OK, "200", "좋아요 성공했습니다."),
     FOLLOW_OK(HttpStatus.OK, "200", "팔로우 성공했습니다."),
+    IMG_UPDATE_OK(HttpStatus.OK, "200", "프로필 이미지가 성공적으로 수정됐습니다"),
     ;
 
     private final HttpStatus httpStatus;

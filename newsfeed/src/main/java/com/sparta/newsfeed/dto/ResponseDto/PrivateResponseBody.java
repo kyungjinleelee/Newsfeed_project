@@ -20,5 +20,4 @@ public class PrivateResponseBody<T> {
         this.statusMsg = statusCode.getStatusMsg();
         this.data = data;
     }
-
 }

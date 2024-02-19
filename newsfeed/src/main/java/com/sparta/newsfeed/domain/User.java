@@ -14,12 +14,12 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Table(name = "users")
-public class User {
+public class User extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto incrememt
     private Long id;         // PK 아이디
 
-    @Column(nullable = false, unique = true)    // null값 불가에 중복 허용
+    @Column(nullable = false, unique = true)
     private String username; // 로그인용 아이디
 
     @Column(nullable = false)
@@ -37,6 +37,9 @@ public class User {
     @Column
     private String profileImg;   // 프로필 이미지
 
+    @Column(columnDefinition = "varchar(1) default 'Y'")
+    private String status;
+
     @Column(nullable = false)
     // @Enumerated: EnumType을 DB컬럼에 저장할 때 사용
     // EnumType.STRING 옵션 사용 시 Enum의 이름을 그대로 DB에 저장함
@@ -45,24 +48,24 @@ public class User {
 
     private Long kakaoId;       // 카카오 id
 
-    public User(String username, String password, String name, String email, UserRoleEnum role) {
+    public User(String username, String password, String name, String email, String status, UserRoleEnum role) {
         this.username = username;
         this.password = password;
         this.name = name;
         this.email = email;
+        this.status = status;
         this.role = role;
         // PK(id)는 넣어줄 필요 없음 auto increment 니까
     }
 
-    public User(String username, String password, String name, String email, String description, UserRoleEnum role) {
-        this.username = username;
-        this.password = password;
-        this.name = name;
-        this.email = email;
-        this.description = description;
-        this.role = role;
-        // 이미지도 추가해주기 .. -> 타입 뭘로해 ?
-    }
+//    public User(String username, String password, String name, String email, String description, UserRoleEnum role) {
+//        this.username = username;
+//        this.password = password;
+//        this.name = name;
+//        this.email = email;
+//        this.description = description;
+//        this.role = role;
+//    }
 
     public User(String username, String password, String email, UserRoleEnum role, Long kakaoId) {
         this.username = username;
@@ -81,6 +84,11 @@ public class User {
         this.name = signupRequestDto.getName();
     }
 
+    // 한 줄 소개 수정
+    public void updateDescription(SignupRequestDto signupRequestDto) {
+        this.description = signupRequestDto.getDescription();
+    }
+
     // 비밀번호 수정
     public void updatePwd(PwdUpdateDto pwdUpdateDto) {
         if (!this.id.equals(pwdUpdateDto.getId()))
@@ -88,4 +96,5 @@ public class User {
 
         this.password = pwdUpdateDto.getNewPwd();
     }
+
 }

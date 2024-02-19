@@ -19,9 +19,12 @@ public class SignupRequestDto {
     @NotBlank
     private String name;
 
+    private String description;
+
     @Pattern(regexp = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$")
     @NotBlank(message = "이메일은 필수 입력 값입니다.")
     private String email;
+    private String status;
     private boolean admin = false;      // admin인지 아닌지 확인 (기본값은 false)
     private String adminToken = "";     // adminToken 기본값은 공백
 }
