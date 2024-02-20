@@ -11,7 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -54,11 +53,18 @@ public class BoardController {
     // 글 수정
     @PutMapping("/boards/{id}")
     public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable Long id,
-                                                        @RequestPart(value = "data") BoardRequestDto requestDto,
-                                                        @RequestPart(value = "file", required = false) List<MultipartFile> multipartFilelist,
+                                                        @RequestBody BoardRequestDto requestDto,
                                                         @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        return ResponseUtil.response(boardService.updateBoard(id, requestDto, multipartFilelist, userDetails.getUser()));
+        return ResponseUtil.response(boardService.updateBoard(id, requestDto, userDetails.getUser()));
     }
+
+    // 글 수정 (이미지)
+//    @PutMapping("/boards/{id}")
+//    public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable Long id,
+//                                                        @RequestPart(value = "file", required = false) List<MultipartFile> multipartFilelist,
+//                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
+//        return ResponseUtil.response(boardService.updateBoard(id, multipartFilelist, userDetails.getUser()));
+//    }
 
     // 글 삭제
     @DeleteMapping("/boards/{id}")
@@ -67,5 +73,6 @@ public class BoardController {
         boardService.deleteBoard(id, userDetails.getUser());
         return ResponseUtil.response(StatusCode.DELETE_OK);
     }
+
 
 }

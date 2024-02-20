@@ -1,24 +1,29 @@
 package com.sparta.newsfeed.controller;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.sparta.newsfeed.dto.RequestDto.DeleteUserRequestDto;
 import com.sparta.newsfeed.dto.RequestDto.SignupRequestDto;
 import com.sparta.newsfeed.jwt.JwtUtil;
+import com.sparta.newsfeed.security.UserDetailsImpl;
 import com.sparta.newsfeed.service.KakaoService;
 import com.sparta.newsfeed.service.UserService;
+import com.sparta.newsfeed.util.GlobalResponse.GlobalResponseDto;
+import com.sparta.newsfeed.util.GlobalResponse.ResponseUtil;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.sparta.newsfeed.util.GlobalResponse.code.StatusCode.DELETE_USER_OK;
 
 @Slf4j
 @Controller
@@ -26,14 +31,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
-    // 1. UserService 주입 받기
     private final UserService userService;
     private final KakaoService kakaoService;
-
-    // 2. 생성자로 주입
-//    public UserController(UserService userService) {
-//        this.userService = userService;
-//    }
 
     // 로그인 페이지
     @GetMapping("/user/login-page")
@@ -72,6 +71,7 @@ public class UserController {
         return "redirect:/api/user/login-page";      // 로그인 페이지 호출
     }
 
+    // 소셜 로그인
     // 1. 카카오에서 보내주는 '인가코드' 받기
     @GetMapping("/user/kakao/callback")
     public String kakaoLogin(@RequestParam String code, HttpServletResponse response) throws JsonProcessingException {
@@ -99,4 +99,13 @@ public class UserController {
 //
 //        return "redirect:/";    // main으로 redirect
 //    }
+
+    // 회원 탈퇴
+    @DeleteMapping("/user/deleteUser")
+    public ResponseEntity<GlobalResponseDto> deleteUser(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                        @RequestBody DeleteUserRequestDto deleteUserRequestDto) {
+        userService.deleteUser(userDetails.getUser(), deleteUserRequestDto);
+        return ResponseUtil.response(DELETE_USER_OK);
+
+    }
 }

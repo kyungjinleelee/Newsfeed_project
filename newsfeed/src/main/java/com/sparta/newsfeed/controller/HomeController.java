@@ -11,6 +11,11 @@ public class HomeController {
         return "index";
     }
 
+    @GetMapping("/admin")
+    public String adminHome() {
+        return "admin";
+    }
+
 //    @GetMapping("/")
 //    public String home(@AuthenticationPrincipal UserDetailsImpl userDetails, Model model) {
 //        if(userDetails != null) {

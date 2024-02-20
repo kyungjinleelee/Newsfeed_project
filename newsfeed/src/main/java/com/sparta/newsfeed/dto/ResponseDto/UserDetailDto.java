@@ -9,6 +9,7 @@ import lombok.ToString;
 
 import java.time.LocalDateTime;
 
+// 기능 : 유저 관련 디테일 응답 Dto
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor

@@ -1,21 +1,27 @@
 package com.sparta.newsfeed.service;
 
+import com.sparta.newsfeed.domainModel.UserCommand;
+import com.sparta.newsfeed.dto.RequestDto.DeleteUserRequestDto;
 import com.sparta.newsfeed.dto.RequestDto.SignupRequestDto;
 import com.sparta.newsfeed.domain.User;
 import com.sparta.newsfeed.domain.UserRoleEnum;
 import com.sparta.newsfeed.repository.UserRepository;
+import com.sparta.newsfeed.util.GlobalResponse.CustomException;
+import com.sparta.newsfeed.util.GlobalResponse.code.StatusCode;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+
 @Service
 @RequiredArgsConstructor
 public class UserService {
-    // 주입 받아오기 (생성자는 @RequiredArgsConstructor로)
+
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final UserCommand userCommand;
  //   private final JwtUtil jwtUtil;
 
 
@@ -57,6 +63,17 @@ public class UserService {
         // 사용자 등록
         User user = new User(username, password, name, email, status, role);    // 객체 세팅
         userRepository.save(user);
+    }
+
+    // 회원 탈퇴
+    public void deleteUser(User user, DeleteUserRequestDto deleteUserRequestDto) {
+        if (passwordEncoder.matches(deleteUserRequestDto.getPassword(), user.getPassword())) {
+            // 비밀번호 일치 시, 회원 상태를 N으로 변경
+            user.setStatus("N");
+            userCommand.saveUser(user);
+        } else {
+            throw new CustomException(StatusCode.PWD_MATCH_FAIL);
+        }
     }
 
     // 로그인 (JWT 방식)

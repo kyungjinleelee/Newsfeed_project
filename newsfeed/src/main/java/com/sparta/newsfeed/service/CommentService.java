@@ -3,6 +3,7 @@ package com.sparta.newsfeed.service;
 import com.sparta.newsfeed.domain.Board;
 import com.sparta.newsfeed.domain.Comment;
 import com.sparta.newsfeed.domain.User;
+import com.sparta.newsfeed.domain.UserRoleEnum;
 import com.sparta.newsfeed.domainModel.BoardCommand;
 import com.sparta.newsfeed.domainModel.BoardQuery;
 import com.sparta.newsfeed.dto.RequestDto.CommentRequestDto;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 // 기능 : 댓글 서비스
 @Service
@@ -94,13 +96,14 @@ public class CommentService {
 
     // 댓글, 대댓글 삭제
     @Transactional
-    public void deleteComment(Long commentId, User user) {
+    public void deleteComment(Long id, User user) {
         // 매개변수로 받아온 코멘트 Id를 활용해서 Comment 객체 저장
-        Comment comment = boardQuery.findCommentById(commentId);
+        Comment comment = boardQuery.findCommentById(id);
 
-        // 매개변수로 받아온 닉네임과 코멘트의 작성자가 동일하지 않다면 예외 처리
-        if (!user.getUsername().equals(comment.getUsername())) {
-            throw new CustomException(StatusCode.NO_AUTH_USER);
+        // 선택한 게시글의 작성자와 토큰에서 가져온 사용자 정보가 일치하는지 확인 (관리자면 삭제 가능)
+        Optional<Comment> found = commentRepository.findByIdAndUser(id, user);
+        if (found.isEmpty() && user.getRole() == UserRoleEnum.USER) {
+            throw new CustomException(StatusCode.BAD_AUTHORITY);
         }
 
         // 관리자이거나, 댓글의 작성자와 삭제하려는 사용자의 정보가 일치한다면, 댓글 삭제
