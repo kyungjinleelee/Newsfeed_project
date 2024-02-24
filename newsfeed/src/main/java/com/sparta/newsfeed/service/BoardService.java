@@ -13,14 +13,18 @@ import com.sparta.newsfeed.repository.ImageFileRepository;
 import com.sparta.newsfeed.s3.AwsS3Uploader;
 import com.sparta.newsfeed.util.GlobalResponse.CustomException;
 import com.sparta.newsfeed.util.GlobalResponse.code.StatusCode;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 // 기능 : 보드 CRUD 서비스
 @Slf4j(topic = "보드 서비스")
@@ -33,6 +37,7 @@ public class BoardService {
     private final AwsS3Uploader awsS3Uploader;
     private final ImageFileRepository imageFileRepository;
     private final BoardRepository boardRepository;  // 얘는 임시로 (전체보기 용)
+
 
 
     // 전체보기
@@ -193,4 +198,50 @@ public class BoardService {
 //        }
 //    }
 
+    // 글 검색 (내용, 키워드)
+    @Transactional(readOnly = true)
+    public Page<BoardResponseDto> findByOption(String keyword, Pageable pageable) {
+        Page<Board> searchResults = boardRepository.findByOption(keyword, pageable);
+        if (searchResults.isEmpty()) {
+            throw new CustomException(StatusCode.BOARD_NOT_FOUND);
+        }
+        return new PageImpl<>(
+                searchResults.getContent().stream()
+                        .map(BoardResponseDto::createBoardDto)
+                        .collect(Collectors.toList()),
+                pageable,
+                searchResults.getTotalElements()
+        );
+    }
+
+
+    // 글 검색 (username으로 검색)
+    public Page<BoardResponseDto> findByUser(String username, Pageable pageable) {
+        Page<Board> searchResults = boardRepository.findByUser(username, pageable);
+        if (searchResults.isEmpty()) {
+            throw new CustomException(StatusCode.BOARD_NOT_FOUND);
+        }
+        return new PageImpl<>(
+                searchResults.getContent().stream()
+                        .map(BoardResponseDto::createBoardDto)
+                        .collect(Collectors.toList()),
+                pageable,
+                searchResults.getTotalElements()
+        );
+    }
+
+    // 글 검색 (닉네임으로 검색)
+    public Page<BoardResponseDto> findByName(String name, Pageable pageable) {
+        Page<Board> searchResults = boardRepository.findByName(name, pageable);
+        if (searchResults.isEmpty()) {
+            throw new CustomException(StatusCode.BOARD_NOT_FOUND);
+        }
+        return new PageImpl<>(
+                searchResults.getContent().stream()
+                        .map(BoardResponseDto::createBoardDto)
+                        .collect(Collectors.toList()),
+                pageable,
+                searchResults.getTotalElements()
+        );
+    }
 }

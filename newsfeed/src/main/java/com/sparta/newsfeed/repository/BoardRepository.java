@@ -3,15 +3,15 @@ package com.sparta.newsfeed.repository;
 import com.sparta.newsfeed.domain.Board;
 import com.sparta.newsfeed.domain.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.RepositoryDefinition;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 // 기능 : 보드 정보 레포
-@Repository
-public interface BoardRepository extends JpaRepository<Board, Long> {
+@RepositoryDefinition(domainClass = Board.class, idClass = Long.class)
+public interface BoardRepository extends JpaRepository<Board, Long>, BoardRepositoryCustom {
 
     List<Board> findAllByOrderByModifiedAtDesc();   // 수정된 날짜 기준 내림차순
 

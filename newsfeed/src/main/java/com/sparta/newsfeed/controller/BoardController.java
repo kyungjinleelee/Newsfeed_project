@@ -8,6 +8,9 @@ import com.sparta.newsfeed.util.GlobalResponse.GlobalResponseDto;
 import com.sparta.newsfeed.util.GlobalResponse.ResponseUtil;
 import com.sparta.newsfeed.util.GlobalResponse.code.StatusCode;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -74,5 +77,22 @@ public class BoardController {
         return ResponseUtil.response(StatusCode.DELETE_OK);
     }
 
+    // 글 검색 (내용, 키워드)
+    @GetMapping("/boards/search/keyword")
+    public ResponseEntity<Page<BoardResponseDto>> searchKeywords(@RequestParam(name = "keyword") String keyword, @PageableDefault(size = 10) Pageable pageable) {
+        return ResponseUtil.response(boardService.findByOption(keyword, pageable));
+    }
+
+    // 글 검색 (username)
+    @GetMapping("/boards/search/user")
+    public ResponseEntity<Page<BoardResponseDto>> searchUser(@RequestParam("username") String username, @PageableDefault(size = 10) Pageable pageable) {
+        return ResponseUtil.response(boardService.findByUser(username, pageable));
+    }
+
+    // 글 검색 (닉네임)
+    @GetMapping("/boards/search/name")
+    public ResponseEntity<Page<BoardResponseDto>> searchName(@RequestParam("name") String name, @PageableDefault(size = 10) Pageable pageable) {
+        return ResponseUtil.response(boardService.findByName(name, pageable));
+    }
 
 }
