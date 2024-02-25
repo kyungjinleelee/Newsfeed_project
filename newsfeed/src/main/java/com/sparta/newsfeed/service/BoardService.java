@@ -9,8 +9,6 @@ import com.sparta.newsfeed.domainModel.BoardQuery;
 import com.sparta.newsfeed.dto.RequestDto.BoardRequestDto;
 import com.sparta.newsfeed.dto.ResponseDto.BoardResponseDto;
 import com.sparta.newsfeed.repository.BoardRepository;
-import com.sparta.newsfeed.repository.ImageFileRepository;
-import com.sparta.newsfeed.s3.AwsS3Uploader;
 import com.sparta.newsfeed.util.GlobalResponse.CustomException;
 import com.sparta.newsfeed.util.GlobalResponse.code.StatusCode;
 import lombok.RequiredArgsConstructor;
@@ -34,8 +32,8 @@ public class BoardService {
 
     private final BoardQuery boardQuery;
     private final BoardCommand boardCommand;
-    private final AwsS3Uploader awsS3Uploader;
-    private final ImageFileRepository imageFileRepository;
+ //   private final AwsS3Uploader awsS3Uploader;
+ //   private final ImageFileRepository imageFileRepository;
     private final BoardRepository boardRepository;  // 얘는 임시로 (전체보기 용)
 
 
