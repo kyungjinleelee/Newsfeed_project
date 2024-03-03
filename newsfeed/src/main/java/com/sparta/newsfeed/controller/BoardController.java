@@ -1,5 +1,6 @@
 package com.sparta.newsfeed.controller;
 
+import com.sparta.newsfeed.aop.annotation.ExeTimer;
 import com.sparta.newsfeed.dto.RequestDto.BoardRequestDto;
 import com.sparta.newsfeed.dto.ResponseDto.BoardResponseDto;
 import com.sparta.newsfeed.security.UserDetailsImpl;
@@ -48,6 +49,7 @@ public class BoardController {
 // }
 
     // 글 상세 보기
+    @ExeTimer
     @GetMapping("/boards/{id}")
     public ResponseEntity<List<BoardResponseDto>> getOneBoard(@PathVariable Long id){
         return ResponseUtil.response(boardService.getOneBoard(id));

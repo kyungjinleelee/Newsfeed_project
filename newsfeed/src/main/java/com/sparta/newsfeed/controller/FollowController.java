@@ -1,5 +1,6 @@
 package com.sparta.newsfeed.controller;
 
+import com.sparta.newsfeed.aop.annotation.ExeTimer;
 import com.sparta.newsfeed.dto.ResponseDto.FollowingBoardDto;
 import com.sparta.newsfeed.security.UserDetailsImpl;
 import com.sparta.newsfeed.service.FollowService;
@@ -21,6 +22,7 @@ public class FollowController {
     private final FollowService followService;
 
     // 팔로우 등록 (삭제)
+    @ExeTimer
     @PostMapping("/follow/{followingId}")   // 팔로우 하려는 유저의 id
     public ResponseEntity<GlobalResponseDto> create(@PathVariable Long followingId, @AuthenticationPrincipal final UserDetailsImpl userDetails) {
         Long followerId = userDetails.getUser().getId();
