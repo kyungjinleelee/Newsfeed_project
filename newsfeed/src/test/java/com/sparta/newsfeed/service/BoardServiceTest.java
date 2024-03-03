@@ -2,13 +2,15 @@ package com.sparta.newsfeed.service;
 
 import com.sparta.newsfeed.domain.Board;
 import com.sparta.newsfeed.domain.User;
+import com.sparta.newsfeed.domain.UserRoleEnum;
 import com.sparta.newsfeed.domainModel.BoardCommand;
 import com.sparta.newsfeed.domainModel.BoardQuery;
 import com.sparta.newsfeed.dto.RequestDto.BoardRequestDto;
 import com.sparta.newsfeed.dto.ResponseDto.BoardResponseDto;
 import com.sparta.newsfeed.repository.BoardRepository;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.sparta.newsfeed.util.GlobalResponse.CustomException;
+import com.sparta.newsfeed.util.GlobalResponse.code.StatusCode;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -31,13 +33,10 @@ class BoardServiceTest {
 
     @InjectMocks
     BoardService boardService;
-
     @Mock
     private BoardQuery boardQuery;
-
     @Mock
     private BoardCommand boardCommand;
-
     @Mock
     private BoardRepository boardRepository;
 
@@ -64,7 +63,7 @@ class BoardServiceTest {
     }
 
     @Test
-    @DisplayName("게시글 작성 테스트")
+    @DisplayName("글 작성 성공 테스트")
     void testCreateBoard() {
         // given
     //    BoardService boardService = new BoardService(boardQuery, boardCommand, boardRepository);
@@ -77,140 +76,323 @@ class BoardServiceTest {
         Board board = new Board(requestDto, user);
         BoardResponseDto expectedResponseDto = new BoardResponseDto(board);
 
-        when(boardCommand.saveBoard(any(Board.class))).thenReturn(board);
-
         // when
+        when(boardCommand.saveBoard(any(Board.class))).thenReturn(board);
         BoardResponseDto actualResponseDto = boardService.createBoardContents(requestDto, user);
+
         // then
         assertEquals(expectedResponseDto.getId(), actualResponseDto.getId());
         assertEquals(expectedResponseDto.getUsername(), actualResponseDto.getUsername());
         assertEquals(expectedResponseDto.getContents(), actualResponseDto.getContents());
     }
 
-    @Test
-    @DisplayName("게시글 수정 테스트")
-    void testUpdateBoard() {
-        // given
-        Long id = 1L;
-        BoardRequestDto requestDto = new BoardRequestDto();
-        requestDto.setContents("수정 테스트 입니다.");
+    @Nested
+    @DisplayName("글 수정 테스트")
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    class Update {
+        @Test
+        @Order(1)
+        @DisplayName("글 수정 성공 테스트")
+        void testUpdateBoard() {
+            // given
+            Long id = 1L;
+            BoardRequestDto requestDto = new BoardRequestDto();
+            requestDto.setContents("수정 테스트 입니다.");
 
-        User user = new User();
-        user.setUsername("kyungjin77");
+            User user = new User();
+            user.setUsername("kyungjin77");
 
-        Board board = new Board(requestDto, user);
+            Board board = new Board(requestDto, user);
 
-        BoardResponseDto expectedResponseDto = new BoardResponseDto(board);  // 수정된 게시글을 기대 결과로 설정
+            BoardResponseDto expectedResponseDto = new BoardResponseDto(board);  // 수정된 게시글을 기대 결과로 설정
 
-        when(boardQuery.findBoardById(id)).thenReturn(board); // boardQuery.findBoardById() 메서드의 동작을 모의화
-        when(boardRepository.findByIdAndUser(id, user)).thenReturn(Optional.of(board)); // boardRepository.findByIdAndUser() 메서드의 동작을 모의화
+            // when
+            when(boardQuery.findBoardById(id)).thenReturn(board); // boardQuery.findBoardById() 메서드의 동작을 모의화
+            when(boardRepository.findByIdAndUser(id, user)).thenReturn(Optional.of(board)); // boardRepository.findByIdAndUser() 메서드의 동작을 모의화
 
-        // when
-        BoardResponseDto actualResponseDto = boardService.updateBoard(id, requestDto, user);
+            BoardResponseDto actualResponseDto = boardService.updateBoard(id, requestDto, user);
 
-        // then
-        assertEquals(expectedResponseDto.getId(), actualResponseDto.getId());
-        assertEquals(expectedResponseDto.getContents(), actualResponseDto.getContents());
-        assertSame(board.getUser(), user, "응답이 정상 처리 되었습니다.");
+            // then
+            assertEquals(expectedResponseDto.getId(), actualResponseDto.getId());
+            assertEquals(expectedResponseDto.getContents(), actualResponseDto.getContents());
+            assertSame(board.getUser(), user, "응답이 정상 처리 되었습니다.");
+        }
+
+        @Test
+        @Order(2)
+        @DisplayName("글 수정 실패 테스트 - 수정하려는 글이 없음")
+        void testUpdateBoardFail_NoSuchBoard() {
+            // given
+            Long id = 1L;
+            BoardRequestDto requestDto = new BoardRequestDto();
+            requestDto.setContents("테스트 글 내용");
+
+            User user = new User();
+            user.setUsername("kyungjin77");
+            user.setRole(UserRoleEnum.USER);
+
+            // when
+            when(boardQuery.findBoardById(id)).thenThrow(new CustomException(StatusCode.BOARD_NOT_FOUND));
+            CustomException exception = assertThrows(CustomException.class, () -> {
+                boardService.updateBoard(id, requestDto, user);
+            });
+
+            // then
+            assertEquals(StatusCode.BOARD_NOT_FOUND, exception.getStatusCode());
+        }
+
+        @Test
+        @Order(3)
+        @DisplayName("글 수정 실패 테스트 - 권한 없음")
+        void testUpdateBoardFail_UnauthorizedUser() {
+            // given
+            Long id = 1L;
+            BoardRequestDto requestDto = new BoardRequestDto();
+            requestDto.setContents("수정 테스트 입니다.");
+
+            User user = new User();
+            user.setUsername("unauthorizedUser");
+            user.setRole(UserRoleEnum.USER); // 권한이 없는 사용자로 설정
+
+            User owner = new User();
+            owner.setUsername("kyungjin77");
+
+            Board board = new Board(requestDto, owner);
+
+            // when
+            when(boardQuery.findBoardById(id)).thenReturn(board); // findBoardById() 메서드의 동작을 모의화
+            when(boardRepository.findByIdAndUser(id, user)).thenReturn(Optional.empty()); // findByIdAndUser() 메서드의 동작을 모의화
+
+            CustomException exception = assertThrows(CustomException.class, () -> {
+                boardService.updateBoard(id, requestDto, user);
+            });
+
+            // then
+            assertEquals(StatusCode.BAD_AUTHORITY, exception.getStatusCode());
+        }
+
     }
 
-    @Test
-    @DisplayName("게시글 삭제 테스트")
-    void testDeleteBoard() {
-        // given
-        Long id = 1L;
+    @Nested
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    @DisplayName("글 삭제 테스트")
+    class Delete {
+        @Test
+        @Order(1)
+        @DisplayName("글 삭제 성공 테스트")
+        void testDeleteBoard() {
+            // given
+            Long id = 1L;
 
-        User user = new User();
-        user.setUsername("kyungjin77");
+            User user = new User();
+            user.setUsername("kyungjin77");
 
-        Board board = new Board();
+            Board board = new Board();
 
-        when(boardQuery.findBoardById(id)).thenReturn(board); // findBoardById() 메서드의 동작을 모의화
-        when(boardRepository.findByIdAndUser(id, user)).thenReturn(Optional.of(board)); // findByIdAndUser() 메서드의 동작을 모의화
-        doNothing().when(boardCommand).deleteBoard(id);       // deleteBoard() 메서드가 호출되면 아무 동작도 하지 않도록 설정
+            when(boardQuery.findBoardById(id)).thenReturn(board); // findBoardById() 메서드의 동작을 모의화
+            when(boardRepository.findByIdAndUser(id, user)).thenReturn(Optional.of(board)); // findByIdAndUser() 메서드의 동작을 모의화
+            doNothing().when(boardCommand).deleteBoard(id);       // deleteBoard() 메서드가 호출되면 아무 동작도 하지 않도록 설정
 
-        // when
-        boardService.deleteBoard(id, user);
+            // when
+            boardService.deleteBoard(id, user);
 
-        // then
-        verify(boardCommand, times(1)).deleteBoard(id); // deleteBoard() 메서드가 한 번 호출되었는지 검증
-        when(boardQuery.findBoardById(id)).thenReturn(null); // 게시글 삭제 후에는 findBoardById() 메서드가 null을 반환하도록 설정
-        assertNull(boardQuery.findBoardById(id)); // 게시글이 실제로 삭제되었는지 확인
+            // then
+            verify(boardCommand, times(1)).deleteBoard(id); // deleteBoard() 메서드가 한 번 호출되었는지 검증
+            when(boardQuery.findBoardById(id)).thenReturn(null); // 게시글 삭제 후에는 findBoardById() 메서드가 null을 반환하도록 설정
+            assertNull(boardQuery.findBoardById(id)); // 게시글이 실제로 삭제되었는지 확인
+        }
+
+        @Test
+        @Order(2)
+        @DisplayName("글 삭제 실패 테스트 - 삭제하려는 글이 없음")
+        void testDeleteBoardFail_NoSuchBoard() {
+            // given
+            Long id = 1L;
+            User user = new User();
+            user.setUsername("kyungjin77");
+
+            // when
+            when(boardQuery.findBoardById(id)).thenThrow(new CustomException(StatusCode.BOARD_NOT_FOUND));
+            CustomException exception = assertThrows(CustomException.class, () -> {
+                boardService.deleteBoard(id, user);
+            });
+
+            // then
+            assertEquals(StatusCode.BOARD_NOT_FOUND, exception.getStatusCode());
+        }
+
+        @Test
+        @Order(3)
+        @DisplayName("글 삭제 실패 테스트 - 권한 없음")
+        void testDeleteBoardFail_UnauthorizedUser() {
+            // given
+            Long id = 1L;
+            BoardRequestDto requestDto = new BoardRequestDto();
+            requestDto.setContents("테스트 내용");
+
+            User user = new User();
+            user.setUsername("unauthorizedUser");
+            user.setRole(UserRoleEnum.USER); // 권한이 없는 사용자로 설정
+
+            User owner = new User();
+            owner.setUsername("kyungjin77");
+
+            Board board = new Board(requestDto, owner);
+
+            // when
+            when(boardQuery.findBoardById(id)).thenReturn(board); // findBoardById() 메서드의 동작을 모의화
+            when(boardRepository.findByIdAndUser(id, user)).thenReturn(Optional.empty()); // findByIdAndUser() 메서드의 동작을 모의화
+
+            CustomException exception = assertThrows(CustomException.class, () -> {
+                boardService.deleteBoard(id, user);
+            });
+
+            // then
+            assertEquals(StatusCode.BAD_AUTHORITY, exception.getStatusCode());
+        }
     }
 
-    @Test
-    @DisplayName("키워드로 검색하기 테스트")
-    void testFindByOption() {
-        // given
-        String keyword = "example";                                     // 테스트 할 키워드 설정
-        Pageable pageable = PageRequest.of(0, 10);  // 페이지네이션 정보 설정
+    @Nested
+    @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+    @DisplayName("검색 테스트")
+    class Search {
+        @Test
+        @Order(1)
+        @DisplayName("키워드로 검색 성공 테스트")
+        void testFindByOption() {
+            // given
+            String keyword = "example";                                     // 테스트 할 키워드 설정
+            Pageable pageable = PageRequest.of(0, 10);  // 페이지네이션 정보 설정
 
-        User user = new User();
-        user.setUsername("kyungjin77");
+            User user = new User();
+            user.setUsername("kyungjin77");
 
-        List<Board> mockResults = new ArrayList<>();                    // 테스트용 결과 목록을 생성
-        Board board = new Board(new BoardRequestDto(), user);
-        mockResults.add(board);   // Board 객체를 생성하여 목록에 추가
-        Page<Board> mockPage = new PageImpl<>(mockResults, pageable, mockResults.size()); // 결과 페이지를 생성
+            List<Board> mockResults = new ArrayList<>();                    // 테스트용 결과 목록을 생성
+            Board board = new Board(new BoardRequestDto(), user);
+            mockResults.add(board);   // Board 객체를 생성하여 목록에 추가
+            Page<Board> mockPage = new PageImpl<>(mockResults, pageable, mockResults.size()); // 결과 페이지를 생성
 
-        when(boardRepository.findByOption(keyword, pageable)).thenReturn(mockPage); // findByOption() 메서드의 동작을 모의화
+            when(boardRepository.findByOption(keyword, pageable)).thenReturn(mockPage); // findByOption() 메서드의 동작을 모의화
 
-        // when
-        Page<BoardResponseDto> resultPage = boardService.findByOption(keyword, pageable);
+            // when
+            Page<BoardResponseDto> resultPage = boardService.findByOption(keyword, pageable);
 
-        // then
-        assertEquals(1, resultPage.getContent().size());        // 반환된 결과의 크기가 올바른지 검증
-        assertEquals(board.getContents(), resultPage.getContent().get(0).getContents());  // 반환된 결과의 첫 번째 요소가 올바른지 검증
-    }
+            // then
+            assertEquals(1, resultPage.getContent().size());        // 반환된 결과의 크기가 올바른지 검증
+            assertEquals(board.getContents(), resultPage.getContent().get(0).getContents());  // 반환된 결과의 첫 번째 요소가 올바른지 검증
+        }
 
-    @Test
-    @DisplayName("유저 아이디로 검색하기 테스트")
-    void testFindByUsername() {
-        // given
-        String username = "exampleUser";        // 테스트할 유저명 설정
-        Pageable pageable = PageRequest.of(0, 10);
+        @Test
+        @Order(2)
+        @DisplayName("키워드로 검색 실패 테스트 - 검색 결과 없음")
+        void testFindByOptionFail_NoSearchResult() {
+            // given
+            String keyword = "테스트";
+            Pageable pageable = PageRequest.of(0, 10);
 
-        User user = new User();
-        user.setUsername(username);
+            when(boardRepository.findByOption(anyString(), any(Pageable.class)))
+                    .thenReturn(Page.empty());
 
-        List<Board> mockResults = new ArrayList<>();
-        Board board = new Board(new BoardRequestDto(), user);
-        mockResults.add(board);   // Board 객체를 생성하여 목록에 추가
+            // when
+            CustomException exception = assertThrows(CustomException.class, () -> {
+                boardService.findByOption(keyword, pageable);
+            });
 
-        Page<Board> mockPage = new PageImpl<>(mockResults, pageable, mockResults.size());
-        when(boardRepository.findByUser(username, pageable)).thenReturn(mockPage);
+            // then
+            assertEquals(StatusCode.BOARD_NOT_FOUND, exception.getStatusCode());
+        }
 
-        // when
-        Page<BoardResponseDto> resultPage = boardService.findByUser(username, pageable);
+        @Test
+        @Order(3)
+        @DisplayName("유저 아이디로 검색 성공 테스트")
+        void testFindByUsername() {
+            // given
+            String username = "exampleUser";        // 테스트할 유저명 설정
+            Pageable pageable = PageRequest.of(0, 10);
 
-        // then
-        assertEquals(1, resultPage.getContent().size());
-        assertEquals(board.getContents(), resultPage.getContent().get(0).getContents());
-    }
+            User user = new User();
+            user.setUsername(username);
 
-    @Test
-    @DisplayName("닉네임으로 검색하기 테스트")
-    void testFindByName() {
-        // given
-        String name = "고양이집사";                                     // 테스트 할 키워드 설정
-        Pageable pageable = PageRequest.of(0, 10);
+            List<Board> mockResults = new ArrayList<>();
+            Board board = new Board(new BoardRequestDto(), user);
+            mockResults.add(board);   // Board 객체를 생성하여 목록에 추가
 
-        User user = new User();
-        user.setUsername("kyungjin77");
+            Page<Board> mockPage = new PageImpl<>(mockResults, pageable, mockResults.size());
+            when(boardRepository.findByUser(username, pageable)).thenReturn(mockPage);
 
-        List<Board> mockResults = new ArrayList<>();
-        Board board = new Board(new BoardRequestDto(), user);
-        mockResults.add(board);   // Board 객체를 생성하여 목록에 추가
-        Page<Board> mockPage = new PageImpl<>(mockResults, pageable, mockResults.size());
+            // when
+            Page<BoardResponseDto> resultPage = boardService.findByUser(username, pageable);
 
-        when(boardRepository.findByName(name, pageable)).thenReturn(mockPage);
+            // then
+            assertEquals(1, resultPage.getContent().size());
+            assertEquals(board.getContents(), resultPage.getContent().get(0).getContents());
+        }
 
-        // when
-        Page<BoardResponseDto> resultPage = boardService.findByName(name, pageable);
+        @Test
+        @Order(4)
+        @DisplayName("유저 아이디로 검색 실패 테스트 - 검색 결과 없음")
+        void testFindByUsernameFail_NoSearchResult() {
+            // given
+            String username = "kyungjin77";
+            Pageable pageable = PageRequest.of(0, 10);
 
-        // then
-        assertEquals(1, resultPage.getContent().size());
-        assertEquals(board.getContents(), resultPage.getContent().get(0).getContents());
+            when(boardRepository.findByUser(anyString(), any(Pageable.class)))
+                    .thenReturn(Page.empty());
+
+            // when
+            CustomException exception = assertThrows(CustomException.class, () -> {
+                boardService.findByUser(username, pageable);
+            });
+
+            // then
+            assertEquals(StatusCode.BOARD_NOT_FOUND, exception.getStatusCode());
+        }
+
+        @Test
+        @Order(5)
+        @DisplayName("닉네임으로 검색 성공 테스트")
+        void testFindByName() {
+            // given
+            String name = "고양이집사";                                     // 테스트 할 키워드 설정
+            Pageable pageable = PageRequest.of(0, 10);
+
+            User user = new User();
+            user.setUsername("kyungjin77");
+
+            List<Board> mockResults = new ArrayList<>();
+            Board board = new Board(new BoardRequestDto(), user);
+            mockResults.add(board);   // Board 객체를 생성하여 목록에 추가
+            Page<Board> mockPage = new PageImpl<>(mockResults, pageable, mockResults.size());
+
+            when(boardRepository.findByName(name, pageable)).thenReturn(mockPage);
+
+            // when
+            Page<BoardResponseDto> resultPage = boardService.findByName(name, pageable);
+
+            // then
+            assertEquals(1, resultPage.getContent().size());
+            assertEquals(board.getContents(), resultPage.getContent().get(0).getContents());
+        }
+
+        @Test
+        @Order(6)
+        @DisplayName("닉네임으로 검색 실패 테스트 - 검색 결과 없음")
+        void testFindByNameFail_NoSearchResult() {
+            // given
+            String name = "냥냥이집사";
+            Pageable pageable = PageRequest.of(0, 10);
+
+            when(boardRepository.findByName(anyString(), any(Pageable.class)))
+                    .thenReturn(Page.empty());
+
+            // when
+            CustomException exception = assertThrows(CustomException.class, () -> {
+                boardService.findByName(name, pageable);
+            });
+
+            // then
+            assertEquals(StatusCode.BOARD_NOT_FOUND, exception.getStatusCode());
+        }
     }
 
 }
