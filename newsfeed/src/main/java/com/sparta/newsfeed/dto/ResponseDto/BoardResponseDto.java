@@ -2,7 +2,7 @@ package com.sparta.newsfeed.dto.ResponseDto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.sparta.newsfeed.domain.Board;
-import com.sparta.newsfeed.domain.ImageFile;
+import com.sparta.newsfeed.domain.Multimedia;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,7 +23,7 @@ public class BoardResponseDto {
     private String contents;            // 게시글 내용
 //    private String name;                // 작성자 닉네임
     private int cmtCnt;                 // 댓글 갯수
-    private List<ImageFile> imageList;     // 이미지
+    private List<Multimedia> imageList;     // 이미지
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss", timezone = "Asia/Seoul")
     private LocalDateTime createdAt;    // 작성 시간
@@ -35,7 +35,7 @@ public class BoardResponseDto {
 
     private int like;
 
-    public BoardResponseDto(Long id, String username, String contents, List<ImageFile> imageList,
+    public BoardResponseDto(Long id, String username, String contents, List<Multimedia> imageList,
                             LocalDateTime createdAt, LocalDateTime modifiedAt, int cmtCnt, int like) {
         this.id = id;
         this.username = username;
@@ -57,7 +57,7 @@ public class BoardResponseDto {
         this.createdAt = board.getCreatedAt();
         this.modifiedAt = board.getModifiedAt();
     //    this.like = board.getBoardLike();
-        this.imageList = board.getImageFileList();
+        this.imageList = board.getMultimediaList();
     }
 
     public BoardResponseDto(Board board) {  // 게시글 전체 조회
@@ -75,7 +75,7 @@ public class BoardResponseDto {
                 board.getId(),
                 board.getUser().getUsername(),
                 board.getContents(),
-                board.getImageFileList(),
+                board.getMultimediaList(),
                 board.getCreatedAt(),
                 board.getModifiedAt(),
                 board.getCommentList().size(),

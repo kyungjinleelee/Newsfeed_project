@@ -1,7 +1,7 @@
 package com.sparta.newsfeed.service;
 
 import com.sparta.newsfeed.domain.Board;
-import com.sparta.newsfeed.domain.ImageFile;
+import com.sparta.newsfeed.domain.Multimedia;
 import com.sparta.newsfeed.domain.User;
 import com.sparta.newsfeed.domain.UserRoleEnum;
 import com.sparta.newsfeed.domainModel.BoardCommand;
@@ -9,6 +9,8 @@ import com.sparta.newsfeed.domainModel.BoardQuery;
 import com.sparta.newsfeed.dto.RequestDto.BoardRequestDto;
 import com.sparta.newsfeed.dto.ResponseDto.BoardResponseDto;
 import com.sparta.newsfeed.repository.BoardRepository;
+import com.sparta.newsfeed.repository.MultimediaRepository;
+import com.sparta.newsfeed.s3.AwsS3Uploader;
 import com.sparta.newsfeed.util.GlobalResponse.CustomException;
 import com.sparta.newsfeed.util.GlobalResponse.code.StatusCode;
 import lombok.RequiredArgsConstructor;
@@ -32,10 +34,9 @@ public class BoardService {
 
     private final BoardQuery boardQuery;
     private final BoardCommand boardCommand;
- //   private final AwsS3Uploader awsS3Uploader;
- //   private final ImageFileRepository imageFileRepository;
+    private final AwsS3Uploader awsS3Uploader;
+    private final MultimediaRepository multimediaRepository;
     private final BoardRepository boardRepository;  // 얘는 임시로 (전체보기 용)
-
 
 
     // 전체보기
@@ -59,32 +60,6 @@ public class BoardService {
         return boardResponseDto;
     }
 
-// @Transactional
-// public BoardResponseDto createBoardImages(List<MultipartFile> multipartFilelist, User user) {
-// log.info("글 생성 진입");
-// // RequestDto -> Entity
-//// Board board = new Board(requestDto, user);
-// log.info("받아온 정보로 새로운 글 생성: ", board);
-// // DB 저장
-//// boardCommand.saveBoard(board);
-// log.info("db저장 성공");
-// if (multipartFilelist != null) {
-// awsS3Uploader.upload(multipartFilelist, "static", board, user);
-// }
-//
-// List<ImageFile> imageFiles = imageFileRepository.findAllByBoard(board);
-// List<String> imagePath = new ArrayList<>();
-// for (ImageFile imageFile : imageFiles) {
-// imagePath.add(imageFile.getPath());
-// }
-//
-// // Entity -> ResponseDto
-//
-// BoardResponseDto boardResponseDto = new BoardResponseDto(board, imagePath);
-// log.info("생성된 dto", boardResponseDto);
-//
-// return boardResponseDto;
-// }
 
     // 게시글 상세 조회
     public List<BoardResponseDto> getOneBoard(Long id) {
@@ -92,8 +67,8 @@ public class BoardService {
         List<BoardResponseDto> result = new ArrayList<>();
 
         List<String> imageFileList = new ArrayList<>();
-        for (ImageFile imageFile : board.getImageFileList()) {
-            imageFileList.add(imageFile.getPath());
+        for (Multimedia multimedia : board.getMultimediaList()) {
+            imageFileList.add(multimedia.getFileUrl());
         }
 
         result.add(new BoardResponseDto(board, imageFileList));
@@ -134,13 +109,13 @@ public class BoardService {
 //        board.update( user);       // Board.java에 update 메서드
 //
 //        if (multipartFilelist != null) {
-//            List<ImageFile> imageFileList = imageFileRepository.findAllByBoard(board);
-//            for (ImageFile File : imageFileList) {
+//            List<Multimedia> imageFileList = multimediaRepository.findAllByBoard(board);
+//            for (Multimedia File : imageFileList) {
 //                String path = File.getPath();
 //                String filename = path.substring(49);
 //                awsS3Uploader.deleteFile(filename);
 //            }
-//            imageFileRepository.deleteAll(imageFileList);
+//            multimediaRepository.deleteAll(imageFileList);
 //
 //            awsS3Uploader.upload(multipartFilelist, "static", board, user);
 //        }
@@ -179,14 +154,14 @@ public class BoardService {
 //
 //        if (board.getUser().getId().equals(user.getId())) {
 //            try {
-//                List<ImageFile> imageFileList = imageFileRepository.findAllByBoard(board);
-//                for (ImageFile imageFile : imageFileList) {
+//                List<Multimedia> imageFileList = multimediaRepository.findAllByBoard(board);
+//                for (Multimedia imageFile : imageFileList) {
 //                    String path = imageFile.getPath();
 //                    String filename = path.substring(49);
 //                    awsS3Uploader.deleteFile(filename);
 //                }
 //
-//                imageFileRepository.deleteAllByBoard(board);    // 게시글에 해당하는 이미지 파일 삭제
+//                multimediaRepository.deleteAllByBoard(board);    // 게시글에 해당하는 이미지 파일 삭제
 //
 //                // 게시글 id와 사용자 정보 일치하면, 게시글 삭제
 //                boardCommand.deleteBoard(id);

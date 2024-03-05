@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class Board extends Timestamped {
     private String username;                             // 작성자 아이디
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)     // 연관된 이미지 파일 정보, cascade로 함께 삭제되도록 설정
-    private List<ImageFile> imageFileList = new ArrayList<>();
+    private List<Multimedia> multimediaList = new ArrayList<>();
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
     private List<Comment> commentList = new ArrayList<>();
@@ -51,6 +52,11 @@ public class Board extends Timestamped {
         this.contents = requestDto.getContents();
         this.user = user;
         this.username = user.getUsername();
+    }
+    // 임시
+    public Board(List<MultipartFile> files, User user) {
+        this.user = user;
+        this.id = user.getId();
     }
 
     // 업데이트
