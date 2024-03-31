@@ -39,6 +39,8 @@ public enum StatusCode {
     DELETE_USER_OK(HttpStatus.OK, "200", "회원 탈퇴 성공했습니다."),
     IMG_UPDATE_OK(HttpStatus.OK, "200", "프로필 이미지가 성공적으로 수정됐습니다."),
     MULTIMEDIA_OK(HttpStatus.OK, "200", "멀티미디어 이미지 업로드 성공했습니다."),
+    MULTIMEDIA_UPDATE_OK(HttpStatus.OK, "200", "멀티미디어 이미지 수정 성공했습니다."),
+    MULTIMEDIA_DELETE_OK(HttpStatus.OK, "200", "멀티미디어 이미지 삭제 성공했습니다."),
     ;
 
     private final HttpStatus httpStatus;

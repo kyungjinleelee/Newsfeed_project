@@ -64,7 +64,7 @@ public class BoardController {
 
     // 글 상세 보기 (이미지)
 
-    // 글 수정
+    // 글 수정 (글)
     @PutMapping("/boards/{id}")
     public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable Long id,
                                                         @RequestBody BoardRequestDto requestDto,
@@ -73,12 +73,14 @@ public class BoardController {
     }
 
     // 글 수정 (이미지)
-//    @PutMapping("/boards/{id}")
-//    public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable Long id,
-//                                                        @RequestPart(value = "file", required = false) List<MultipartFile> multipartFilelist,
-//                                                        @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        return ResponseUtil.response(boardService.updateBoard(id, multipartFilelist, userDetails.getUser()));
-//    }
+    @PutMapping("/boards/{boardId}/images")
+    public ResponseEntity<GlobalResponseDto<List<MultimediaResponseDto>>> updateBoardImages(
+                                                        @RequestPart(value = "file") List<MultipartFile> files,
+                                                        @AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                        @PathVariable Long boardId) throws IOException {
+        List<MultimediaResponseDto> responseDtoList = multimediaService.updateBoardMultimedia(files, userDetails.getUser(), boardId);
+        return ResponseUtil.response(StatusCode.MULTIMEDIA_UPDATE_OK, responseDtoList);
+    }
 
     // 글 삭제
     @DeleteMapping("/boards/{id}")
@@ -86,6 +88,14 @@ public class BoardController {
                                                          @AuthenticationPrincipal UserDetailsImpl userDetails) {
         boardService.deleteBoard(id, userDetails.getUser());
         return ResponseUtil.response(StatusCode.DELETE_OK);
+    }
+
+    // 글 삭제 (이미지)
+    @DeleteMapping("/boards/{boardId}/images")
+    public ResponseEntity<GlobalResponseDto<List<MultimediaResponseDto>>> deleteBoardImages(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                                         @PathVariable Long boardId) {
+        List<MultimediaResponseDto> responseDtoList = multimediaService.deleteMultimedia(userDetails.getUser(), boardId);
+        return ResponseUtil.response(StatusCode.MULTIMEDIA_DELETE_OK, responseDtoList);
     }
 
     // 글 검색 (내용, 키워드)
