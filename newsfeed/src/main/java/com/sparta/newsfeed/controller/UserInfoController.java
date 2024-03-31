@@ -18,7 +18,9 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,13 +68,12 @@ public class UserInfoController {
         return ResponseUtil.response(userInfoService.changeDescription(signupRequestDto, userDetails.getUser()));
     }
 
-//    // 프로필 이미지 수정
-//    @PutMapping("/user-info/changeImg")
-//    public ResponseEntity<PrivateResponseBody> changeProfileImg(@RequestPart(value = "file")MultipartFile file,
-//                                                                @AuthenticationPrincipal UserDetailsImpl userDetails) {
-//        return ResponseUtil.response(userInfoService.updateProfileImg(file, userDetails.getUser()));
-//
-//    }
+    // 프로필 사진 수정
+    @PutMapping("/user-info/changeProfile")
+    public ResponseEntity<PrivateResponseBody> changeProfile(@AuthenticationPrincipal UserDetailsImpl userDetails,
+                                                             @RequestPart(value = "file") MultipartFile image) throws IOException {
+        return ResponseUtil.response(userInfoService.changeProfile(userDetails.getUser(), image));
+    }
 
     // 비밀번호 수정
     @PutMapping("/user-info/{id}")      // userid

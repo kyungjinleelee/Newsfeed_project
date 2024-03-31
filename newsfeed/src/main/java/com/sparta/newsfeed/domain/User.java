@@ -41,12 +41,10 @@ public class User extends Timestamped{
     private String status;
 
     @Column(nullable = false)
-    // @Enumerated: EnumType을 DB컬럼에 저장할 때 사용
-    // EnumType.STRING 옵션 사용 시 Enum의 이름을 그대로 DB에 저장함
     @Enumerated(value = EnumType.STRING)
     private UserRoleEnum role;
 
-    private Long kakaoId;       // 카카오 id
+    private Long kakaoId;
 
     public User(String username, String password, String name, String email, String status, UserRoleEnum role) {
         this.username = username;
@@ -87,6 +85,11 @@ public class User extends Timestamped{
     // 한 줄 소개 수정
     public void updateDescription(SignupRequestDto signupRequestDto) {
         this.description = signupRequestDto.getDescription();
+    }
+
+    // 프로필 사진 수정
+    public void updateProfileImg(String profileImg) {
+        this.profileImg = profileImg;
     }
 
     // 비밀번호 수정

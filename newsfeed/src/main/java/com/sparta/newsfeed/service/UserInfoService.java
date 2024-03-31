@@ -16,7 +16,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 
 // 기능 : 회원 정보 Service
@@ -57,6 +59,24 @@ public class UserInfoService {
         }
     }
 
+    // 프로필 사진 수정
+    @Transactional
+    public PrivateResponseBody changeProfile(User user, MultipartFile image) throws IOException {
+        User user1 = userQuery.findUserById(user.getId());
+
+        if(user.getId().equals(user1.getId())) {
+            String profileImg = awsS3Uploader.uploadProfile(image, "profileImg");
+
+            // 유저 수정
+            user1.updateProfileImg(profileImg);
+
+            userRepository.save(user1);
+
+            return new PrivateResponseBody<>(StatusCode.OK, "프로필 사진 수정 완료");
+        } else {
+            throw new CustomException(StatusCode.LOGIN_MATCH_FAIL);
+        }
+    }
 
     // 비밀번호 수정
     @Transactional
