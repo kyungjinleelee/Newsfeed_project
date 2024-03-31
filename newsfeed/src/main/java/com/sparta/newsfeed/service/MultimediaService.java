@@ -77,7 +77,7 @@ public class MultimediaService {
                 .collect(Collectors.toList());
     }
 
-    // 글 이미지 삭제
+    // 글 삭제 (이미지)
     @Transactional
     public List<MultimediaResponseDto> deleteMultimedia(User user, Long boardId) {
         Board target = boardQuery.findBoardById(boardId);
@@ -98,6 +98,15 @@ public class MultimediaService {
     }
 
     // 글 이미지 조회
+    public List<MultimediaResponseDto> getOneMultimediaList(Long boardId) {
+        boardQuery.findBoardById(boardId);
+
+        List<Multimedia> multimediaList = multimediaRepository.findByBoardId(boardId);
+
+        return multimediaList.stream()
+                .map(multimedia -> new MultimediaResponseDto(multimedia.getFileUrl()))
+                .collect(Collectors.toList());
+    }
 
     // ==================== 메서드 ======================
     private void createMultimedia(Board board, List<MultipartFile> files) throws IOException{
@@ -111,7 +120,4 @@ public class MultimediaService {
         board.getMultimediaList().addAll(newMultimediaList);
         multimediaRepository.saveAll(newMultimediaList);
     }
-
-
-
 }

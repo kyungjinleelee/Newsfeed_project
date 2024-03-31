@@ -63,6 +63,10 @@ public class BoardController {
     }
 
     // 글 상세 보기 (이미지)
+    @GetMapping("/boards/{id}/images")
+    public ResponseEntity<List<MultimediaResponseDto>> getOneMultimediaList(@PathVariable Long id) {
+        return ResponseUtil.response(multimediaService.getOneMultimediaList(id));
+    }
 
     // 글 수정 (글)
     @PutMapping("/boards/{id}")
@@ -93,7 +97,7 @@ public class BoardController {
     // 글 삭제 (이미지)
     @DeleteMapping("/boards/{boardId}/images")
     public ResponseEntity<GlobalResponseDto<List<MultimediaResponseDto>>> deleteBoardImages(@AuthenticationPrincipal UserDetailsImpl userDetails,
-                                                                         @PathVariable Long boardId) {
+                                                                                            @PathVariable Long boardId) {
         List<MultimediaResponseDto> responseDtoList = multimediaService.deleteMultimedia(userDetails.getUser(), boardId);
         return ResponseUtil.response(StatusCode.MULTIMEDIA_DELETE_OK, responseDtoList);
     }
