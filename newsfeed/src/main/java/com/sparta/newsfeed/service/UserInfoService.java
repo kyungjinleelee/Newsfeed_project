@@ -1,11 +1,14 @@
 package com.sparta.newsfeed.service;
 
+import com.sparta.newsfeed.domain.Board;
 import com.sparta.newsfeed.domain.PwdHistory;
 import com.sparta.newsfeed.domain.User;
 import com.sparta.newsfeed.domainModel.UserQuery;
 import com.sparta.newsfeed.dto.RequestDto.PwdUpdateDto;
 import com.sparta.newsfeed.dto.RequestDto.SignupRequestDto;
+import com.sparta.newsfeed.dto.ResponseDto.BoardResponseDto;
 import com.sparta.newsfeed.dto.ResponseDto.PrivateResponseBody;
+import com.sparta.newsfeed.repository.BoardRepository;
 import com.sparta.newsfeed.repository.HistoryRepository;
 import com.sparta.newsfeed.repository.UserRepository;
 import com.sparta.newsfeed.s3.AwsS3Uploader;
@@ -20,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 // 기능 : 회원 정보 Service
 @Service
@@ -28,6 +32,7 @@ import java.util.List;
 public class UserInfoService {
     private final UserQuery userQuery;
     private final UserRepository userRepository;
+    private final BoardRepository boardRepository;
     private final HistoryRepository historyRepository;
     private final PasswordEncoder passwordEncoder;
     private final AwsS3Uploader awsS3Uploader;
@@ -76,6 +81,19 @@ public class UserInfoService {
         } else {
             throw new CustomException(StatusCode.LOGIN_MATCH_FAIL);
         }
+    }
+
+    // 내가 쓴 게시글 조회
+    public List<BoardResponseDto> getBoardsByUserId(User user) {
+        User user1 = userQuery.findUserById(user.getId());
+
+        // 내가 쓴 글 작성된 순 대로 내림차순으로 가져옴
+        List<Board> boards = boardRepository.findByUserIdOrderByCreatedAtDesc(user.getId());
+
+        // Dto로 변환하여 반환
+        return boards.stream()
+                .map(BoardResponseDto::createBoardDto)
+                .collect(Collectors.toList());
     }
 
     // 비밀번호 수정

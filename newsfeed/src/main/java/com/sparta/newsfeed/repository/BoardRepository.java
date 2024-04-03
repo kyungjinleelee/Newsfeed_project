@@ -23,4 +23,7 @@ public interface BoardRepository extends JpaRepository<Board, Long>, BoardReposi
 
     // 팔로우 한 유저 글 보기 관련
     List<Board> findByUserIn(List<User> followings);
+
+    // 내가 쓴 글 보기
+    List<Board> findByUserIdOrderByCreatedAtDesc(Long userid);
 }

@@ -1,5 +1,8 @@
 package com.sparta.newsfeed.domain;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sparta.newsfeed.dto.RequestDto.BoardRequestDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -17,12 +20,14 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "board")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Board extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;                                 // 보드 id (Auto increment)
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "user_id", nullable = false)  // User 와 연관 관계 설정 (외래키 설정)
     private User user;                               // User 객체 전체
 

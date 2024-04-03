@@ -3,6 +3,7 @@ package com.sparta.newsfeed.controller;
 import com.sparta.newsfeed.domain.UserRoleEnum;
 import com.sparta.newsfeed.dto.RequestDto.PwdUpdateDto;
 import com.sparta.newsfeed.dto.RequestDto.SignupRequestDto;
+import com.sparta.newsfeed.dto.ResponseDto.BoardResponseDto;
 import com.sparta.newsfeed.dto.ResponseDto.PrivateResponseBody;
 import com.sparta.newsfeed.dto.UserInfoDto;
 import com.sparta.newsfeed.security.UserDetailsImpl;
@@ -99,8 +100,11 @@ public class UserInfoController {
         return ResponseUtil.response(response);
     }
 
-
-
-
+    // 내가 쓴 게시글 조회
+    @GetMapping("/user-info/boards")
+    @ResponseBody
+    public ResponseEntity<List<BoardResponseDto>> getBoardsByUserId(@AuthenticationPrincipal UserDetailsImpl userDetails) {
+        return ResponseUtil.response(userInfoService.getBoardsByUserId(userDetails.getUser()));
+    }
 
 }
