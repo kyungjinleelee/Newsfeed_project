@@ -1,7 +1,5 @@
 package com.sparta.newsfeed.domain;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import com.sparta.newsfeed.dto.RequestDto.PwdUpdateDto;
 import com.sparta.newsfeed.dto.RequestDto.SignupRequestDto;
 import com.sparta.newsfeed.util.GlobalResponse.CustomException;
@@ -16,7 +14,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Table(name = "users")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User extends Timestamped{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // auto incrememt
