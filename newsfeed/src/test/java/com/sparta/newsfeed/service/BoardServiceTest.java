@@ -14,10 +14,7 @@ import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.ArrayList;
@@ -45,21 +42,24 @@ class BoardServiceTest {
     void testGetBoard() {
         // given
         User user = new User();
-
         BoardRequestDto requestDto = new BoardRequestDto();
+        Board board = new Board(requestDto, user);
 
         List<Board> mockResults = new ArrayList<>();
-        Board board = new Board(requestDto, user);
         mockResults.add(board);  // Board 객체를 생성하여 목록에 추가
 
-        when(boardRepository.findAllByOrderByModifiedAtDesc()).thenReturn(mockResults);
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("createdAt").descending());
+        Page<Board> mockPage = new PageImpl<>(mockResults, pageable, 1);
+        when(boardRepository.findAll(pageable)).thenReturn(mockPage);
 
         // when
-        List<BoardResponseDto> resultPage = boardService.getBoards();
+        Page<BoardResponseDto> resultPage = boardService.getBoards(pageable);
 
         // then
-        assertEquals(1, resultPage.size());  // 반환된 결과의 크기가 올바른지 검증
-        assertEquals(board.getContents(), resultPage.get(0).getContents());  // 반환된 결과의 첫 번째 요소의 내용이 올바른지 검증
+        assertEquals(10, resultPage.getSize());  // 반환된 결과의 크기가 올바른지 검증
+        assertEquals(board.getContents(), resultPage.getContent().get(0).getContents());  // 반환된 결과의 첫 번째 요소의 내용이 올바른지 검증
+        assertEquals(1, resultPage.getTotalPages());
+        assertEquals(0, resultPage.getNumber());
     }
 
     @Test

@@ -14,7 +14,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -34,9 +36,11 @@ public class BoardController {
     private final MultimediaService multimediaService;
 
     // 전체 글 보기
+    @ExeTimer
     @GetMapping("/boards")
-    public ResponseEntity<List<BoardResponseDto>> getBoards() {
-        return ResponseUtil.response(boardService.getBoards());
+    public ResponseEntity<Page<BoardResponseDto>> getBoards(@PageableDefault(value=10)
+                                                            @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
+        return ResponseUtil.response(boardService.getBoards(pageable));
     }
 
     // 글 쓰기 (글)

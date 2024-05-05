@@ -35,10 +35,17 @@ public class BoardService {
     private final BoardRepository boardRepository;
 
 
-    // 전체보기
-    public List<BoardResponseDto> getBoards() {
+    // 글 전체 보기
+    public Page<BoardResponseDto> getBoards(Pageable pageable) {
         // DB 조회
-        return boardRepository.findAllByOrderByModifiedAtDesc().stream().map(BoardResponseDto::new).toList();
+        Page<Board> boards = boardRepository.findAll(pageable);
+        return new PageImpl<>(
+                boards.getContent().stream()
+                        .map(BoardResponseDto::createBoardDto)
+                        .collect(Collectors.toList()),
+                pageable,
+                boards.getTotalElements()
+        );
     }
 
     // 글 쓰기
