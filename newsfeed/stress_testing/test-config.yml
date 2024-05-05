@@ -1,0 +1,25 @@
+config:
+  target: http://localhost:8080
+  phases:
+    - duration: 30
+      arrivalRate: 10 # 30초동안, 1초당 10개씩 보낸다.(웜업)
+      name: Warm up
+    - duration: 20
+      arrivalRate: 20
+      rampTo: 200
+      name: Ramp up load
+    - duration: 20
+      arrivalRate: 200
+      name: Sustained load
+    - duration: 30
+      arrivalRate: 200
+      rampTo: 20
+      name: End of load
+  http:
+    timeout: 60
+
+scenarios:
+  - name: "get boards"
+    flow:
+      - get:
+          url: "/api/boards"
