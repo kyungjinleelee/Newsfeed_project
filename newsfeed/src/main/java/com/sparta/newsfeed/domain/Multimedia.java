@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 
 // 기능 : S3에 저장한 이미지 정보 저장 Entity
 @Getter
@@ -13,6 +14,7 @@ import lombok.Setter;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@BatchSize(size = 10)
 @Table(name = "multimedia")
 public class Multimedia {
     @Id

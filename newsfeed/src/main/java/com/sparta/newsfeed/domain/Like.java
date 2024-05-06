@@ -3,11 +3,13 @@ package com.sparta.newsfeed.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.BatchSize;
 
 // 기능 : 좋아요 정보 Entity
 @Getter
 @Entity
 @NoArgsConstructor
+@BatchSize(size = 10)
 @Table(name = "`like`")
 public class Like {
 

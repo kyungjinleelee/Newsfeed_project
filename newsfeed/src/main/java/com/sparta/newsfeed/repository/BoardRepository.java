@@ -5,6 +5,7 @@ import com.sparta.newsfeed.domain.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.RepositoryDefinition;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import java.util.Optional;
 @RepositoryDefinition(domainClass = Board.class, idClass = Long.class)
 public interface BoardRepository extends JpaRepository<Board, Long>, BoardRepositoryCustom {
 
+    @Query("SELECT p FROM Board p JOIN FETCH p.user")
     Page<Board> findAll(Pageable pageable);
 
     List<Board> findAllByOrderByModifiedAtDesc();   // 수정된 날짜 기준 내림차순

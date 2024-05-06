@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
@@ -32,12 +33,14 @@ public class Board extends Timestamped {
     @Column
     private String username;                             // 작성자 아이디
 
+    @BatchSize(size = 10)
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)     // 연관된 이미지 파일 정보, cascade로 함께 삭제되도록 설정
     private List<Multimedia> multimediaList = new ArrayList<>();
 
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
     private List<Comment> commentList = new ArrayList<>();
 
+    //@BatchSize(size = 10)
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
     private List<Like> boardLike = new ArrayList<>();
 
