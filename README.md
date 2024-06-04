@@ -3,30 +3,36 @@
 
 ## 프로젝트 소개 📢
 - 프로젝트 기간 :
-  2024.02 ~ 2024.03, 2024.04 (6주)
+  - 2024.02 ~ 2024.03, 2024.04 (6주) / 개인 프로젝트
+- 개발 환경 :
+  - <img src="https://img.shields.io/badge/Framework-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"><img src="https://img.shields.io/badge/3.2.2-515151?style=for-the-badge">
+  - <img src="https://img.shields.io/badge/Build-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=Gradle&logoColor=white"><img src="https://img.shields.io/badge/-515151?style=for-the-badge">
+  - <img src="https://img.shields.io/badge/Language-%23121011?style=for-the-badge"><img src="https://img.shields.io/badge/java-%23ED8B00?style=for-the-badge&logo=openjdk&logoColor=white"><img src="https://img.shields.io/badge/18-515151?style=for-the-badge">
 
 
-
-# 기술 스택 🔨
+## 기술 스택 🔨
 <div align=center> 
   <img src="https://img.shields.io/badge/java-007396?style=for-the-badge&logo=java&logoColor=white"> 
   <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white">
   <img src="https://img.shields.io/badge/Spring Security-6DB33F?style=for-the-badge&logo=Spring Security&logoColor=white">
   <img src="https://img.shields.io/badge/gradle-02303A?style=for-the-badge&logo=gradle&logoColor=white">
   <br>
-  <img src="https://img.shields.io/badge/JUnit5-25A162?style=for-the-badge&logo=JUnit5&logoColor=white">
+  <img src="https://img.shields.io/badge/JUnit5-FB4F14?style=for-the-badge&logo=JUnit5&logoColor=white">
   <img src="https://img.shields.io/badge/mysql-4479A1?style=for-the-badge&logo=mysql&logoColor=white">
   <img src="https://img.shields.io/badge/Amazon%20S3-F36D00?style=for-the-badge&logo=Amazon%20S3&logoColor=white">
   <br>
-  <img src="https://img.shields.io/badge/springJPA-90E59A?style=for-the-badge&logo=springboot&logoColor=white">
+  <img src="https://img.shields.io/badge/springDataJPA-90E59A?style=for-the-badge&logo=springboot&logoColor=white">
+  <img src="https://img.shields.io/badge/QueryDSL-E34F26?style=for-the-badge&logo=html5&logoColor=white">
   <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white">
   <br>
 </div>
 
-## API 명세서
-보러가기
-## ERD
+## API 명세서 📒
+[보러가기]
+
+## ERD 🧩
 ![image](https://github.com/kyungjinleelee/Newsfeed_project/assets/105157765/d3357310-cce4-4470-a550-1f72571475a1)
 
-## 트러블슈팅 및 성능 개선
-
+## 트러블슈팅 및 성능 개선 🎇
+게시글 조회 API 응답 시간 53.87% 단축, 응답 시간 격차 59.57% 개선
+- 부하 테스트와 리팩토링을 통한 문제 해결 [핸들링 기록](https://developer-jinnie.tistory.com/38)
