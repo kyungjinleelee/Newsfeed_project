@@ -54,7 +54,7 @@ public class UserController {
 //        return "redirect:/api/user/login-page";      // 로그인 페이지 호출
 //    }
     @PostMapping("/user/signup")
-    public String signup(@Valid SignupRequestDto requestDto, BindingResult bindingResult) {    // 회원가입 성공하면 로그인 페이지 반환할 것이기 때문에 반환타입 String으로 설정, @Valid에서 예외 발생 시 BindingResult 객체에 오류에 대한 정보가 담겨서 들어옴
+    public String signup(@Valid @RequestBody SignupRequestDto requestDto, BindingResult bindingResult) {    // 회원가입 성공하면 로그인 페이지 반환할 것이기 때문에 반환타입 String으로 설정, @Valid에서 예외 발생 시 BindingResult 객체에 오류에 대한 정보가 담겨서 들어옴
         // Validation 예외 처리
         // 유효성 통과 못한 필드와 메세지를 핸들링
         List<FieldError> fieldErrors = bindingResult.getFieldErrors();  // .getFieldErrors: 오류 발생한 Fields들을 하나씩 가져올 수 있음
