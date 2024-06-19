@@ -23,14 +23,13 @@ public class LikeController {
 
     // 좋아요 기능
     @PostMapping("/{id}/likes")
-    public ResponseEntity<GlobalResponseDto> like(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
-        likeService.like(id, userDetails.getUser().getUsername());
-        return ResponseUtil.response(StatusCode.LIKE_OK);
+    public ResponseEntity<GlobalResponseDto> toggleLike(@PathVariable Long id, @AuthenticationPrincipal UserDetailsImpl userDetails) {
+        boolean liked = likeService.toggleLike(id, userDetails.getUser().getUsername());
+
+        if (liked) {
+            return ResponseUtil.response(StatusCode.LIKE_OK);
+        } else {
+            return ResponseUtil.response(StatusCode.UNLIKE_OK);
+        }
     }
-
-    // 좋아요 다시 누르면 삭제되게 해놨는데 그럼 그거 테스트 하려면 좋아요 취소 기능 컨트롤러에 만들면 되는건가?
-//    @DeleteMapping("/{id}/likes")
-//    public
-
-
 }

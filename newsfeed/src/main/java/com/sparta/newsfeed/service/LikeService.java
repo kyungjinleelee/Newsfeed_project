@@ -4,7 +4,6 @@ import com.sparta.newsfeed.domain.Board;
 import com.sparta.newsfeed.domain.Like;
 import com.sparta.newsfeed.domain.User;
 import com.sparta.newsfeed.domainModel.BoardQuery;
-import com.sparta.newsfeed.dto.RequestDto.LikeRequestDto;
 import com.sparta.newsfeed.repository.LikeRepository;
 import com.sparta.newsfeed.repository.UserRepository;
 import com.sparta.newsfeed.util.GlobalResponse.CustomException;
@@ -25,7 +24,7 @@ public class LikeService {
 
     // 좋아요 기능 메서드
     @Transactional
-    public LikeRequestDto like(Long board_id, String username) {
+    public boolean toggleLike(Long board_id, String username) {
         // 글 정보
         Board board = boardQuery.findBoardById(board_id);
 
@@ -43,10 +42,10 @@ public class LikeService {
         if (existingLike.isPresent()) {
             likeRepository.delete(existingLike.get());
             // 좋아요 취소 완료
-            return LikeRequestDto.cancel(existingLike.get());
+            return false;
         } else {
-            Like created = likeRepository.save(new Like(user, board));
-            return LikeRequestDto.like(created);
+            likeRepository.save(new Like(user, board));
+            return true;
         }
     }
 }

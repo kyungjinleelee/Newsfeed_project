@@ -33,6 +33,7 @@ public enum StatusCode {
     PWD_UPDATE_OK(HttpStatus.OK, "200", "비밀번호 수정 성공했습니다."),
     DELETE_OK(HttpStatus.OK, "200", "삭제 성공했습니다."),
     LIKE_OK(HttpStatus.OK, "200", "좋아요 성공했습니다."),
+    UNLIKE_OK(HttpStatus.OK, "200", "좋아요 취소 성공했습니다."),
     FOLLOW_OK(HttpStatus.OK, "200", "팔로우 성공했습니다."),
     UNFOLLOW_OK(HttpStatus.OK,"200", "팔로우 취소 성공했습니다."),
     CHANGE_ROLE_OK(HttpStatus.OK, "200", "유저 권한 변경 성공했습니다."),
