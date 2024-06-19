@@ -3,7 +3,6 @@ package com.sparta.newsfeed.service;
 import com.sparta.newsfeed.domain.Board;
 import com.sparta.newsfeed.domain.Follow;
 import com.sparta.newsfeed.domain.User;
-import com.sparta.newsfeed.dto.RequestDto.FollowRequestDto;
 import com.sparta.newsfeed.dto.ResponseDto.FollowingBoardDto;
 import com.sparta.newsfeed.repository.BoardRepository;
 import com.sparta.newsfeed.repository.FollowRepository;
@@ -30,7 +29,7 @@ public class FollowService {
 
     // 팔로우 하기
     @Transactional
-    public FollowRequestDto create(Long followingId, Long followerId) {
+    public boolean toggleFollow(Long followingId, Long followerId) {
         // 팔로잉 유저 정보 체크
         User following = checkUser(followingId);
 
@@ -47,11 +46,11 @@ public class FollowService {
         if(existingFollow.isPresent()) {
             followRepository.deleteByFollowingIdAndFollowerId(followingId, followerId);
             // 팔로우 취소 완료
-            return FollowRequestDto.requestDto(existingFollow.get());
+            return false;
         } else {
             Follow follow = Follow.createFollow(following, follower);
-            Follow created = followRepository.save(follow);
-            return FollowRequestDto.requestDto(created);
+            followRepository.save(follow);
+            return true;
         }
     }
 

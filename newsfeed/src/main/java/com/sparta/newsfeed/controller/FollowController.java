@@ -24,11 +24,15 @@ public class FollowController {
     // 팔로우 등록 (삭제)
     @ExeTimer
     @PostMapping("/follow/{followingId}")   // 팔로우 하려는 유저의 id
-    public ResponseEntity<GlobalResponseDto> create(@PathVariable Long followingId, @AuthenticationPrincipal final UserDetailsImpl userDetails) {
+    public ResponseEntity<GlobalResponseDto> toggleFollow(@PathVariable Long followingId, @AuthenticationPrincipal final UserDetailsImpl userDetails) {
         Long followerId = userDetails.getUser().getId();
-        followService.create(followingId, followerId);
+        boolean followed = followService.toggleFollow(followingId, followerId);
 
-        return ResponseUtil.response(StatusCode.FOLLOW_OK);
+        if (followed) {
+            return ResponseUtil.response(StatusCode.FOLLOW_OK);
+        } else {
+            return ResponseUtil.response(StatusCode.UNFOLLOW_OK);
+        }
     }
 
     // 팔로우하는 유저 게시물 보기
