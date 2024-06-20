@@ -25,10 +25,6 @@ public class Follow extends Timestamped {
     @JoinColumn(name = "following_id")      // 팔로우 당하는 사람
     private User following;
 
-//    public Follow(User following, User follower) {
-//        this.following = following;
-//        this.follower = follower;
-//    }
 
     @Builder
     public Follow(Long followId, User following, User follower) {

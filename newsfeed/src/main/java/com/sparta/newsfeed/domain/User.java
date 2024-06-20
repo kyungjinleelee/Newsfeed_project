@@ -56,14 +56,6 @@ public class User extends Timestamped{
         // PK(id)는 넣어줄 필요 없음 auto increment 니까
     }
 
-//    public User(String username, String password, String name, String email, String description, UserRoleEnum role) {
-//        this.username = username;
-//        this.password = password;
-//        this.name = name;
-//        this.email = email;
-//        this.description = description;
-//        this.role = role;
-//    }
 
     public User(String username, String password, String email, UserRoleEnum role, Long kakaoId) {
         this.username = username;

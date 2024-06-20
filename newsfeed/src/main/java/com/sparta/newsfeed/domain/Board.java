@@ -21,7 +21,7 @@ import java.util.List;
 public class Board extends Timestamped {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;                                 // 보드 id (Auto increment)
+    private Long id;                                 // 보드 id
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id", nullable = false)  // User 와 연관 관계 설정 (외래키 설정)
@@ -44,12 +44,6 @@ public class Board extends Timestamped {
     @OneToMany(mappedBy = "board", cascade = CascadeType.REMOVE)
     private List<Like> boardLike = new ArrayList<>();
 
-    // 글 쓰기
-//    public Board(BoardRequestDto requestDto, User user, String boardImg) {
-//        this.contents = requestDto.getContents();
-//        this.user = user;
-//        this.boardImg = boardImg;
-//    }
 
     public Board(BoardRequestDto requestDto, User user) {
         this.contents = requestDto.getContents();
@@ -68,12 +62,4 @@ public class Board extends Timestamped {
         this.user = user;
     }
 
-
-
-//    public static Board of(BoardRequestDto requestDto, User user) {
-//        return Board.builder()
-//                .requestDto(requestDto)
-//                .user(user)
-//                .build();
-//    }
 }

@@ -46,13 +46,7 @@ public class UserController {
         return "signup";
     }
 
-    // 회원가입 (1 + 2) (예외 처리 전)
-//    @PostMapping("/user/signup")
-//    public String signup(@ModelAttribute @Valid SignupRequestDto requestDto) {    // 회원가입 성공하면 로그인 페이지 반환할 것이기 때문에 반환타입 String으로 설정
-//        userService.signup(requestDto);     // userService.signup에 받아온 request 전달
-//
-//        return "redirect:/api/user/login-page";      // 로그인 페이지 호출
-//    }
+
     @PostMapping("/user/signup")
     public String signup(@Valid @RequestBody SignupRequestDto requestDto, BindingResult bindingResult) {    // 회원가입 성공하면 로그인 페이지 반환할 것이기 때문에 반환타입 String으로 설정, @Valid에서 예외 발생 시 BindingResult 객체에 오류에 대한 정보가 담겨서 들어옴
         // Validation 예외 처리
@@ -86,19 +80,6 @@ public class UserController {
         return "redirect:/";    // 3. 로그인 성공 시 "/"으로 redirect
     }
 
-
-    // 로그인 (JWT 방식)
-//    @PostMapping("/user/login")
-//    public String login(@ModelAttribute LoginRequestDto requestDto, HttpServletResponse res){
-//        try {
-//            userService.login(requestDto, res);
-//        } catch (Exception e) {
-//            return "redirect:/api/user/login-page?error";
-//            // 이렇게 해도 되고 e.getMessage()해서 로그 확인해도 됨
-//        }
-//
-//        return "redirect:/";    // main으로 redirect
-//    }
 
     // 회원 탈퇴
     @DeleteMapping("/user/deleteUser")
