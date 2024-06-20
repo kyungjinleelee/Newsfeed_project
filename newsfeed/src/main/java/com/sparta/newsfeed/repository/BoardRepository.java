@@ -7,7 +7,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.RepositoryDefinition;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -19,13 +18,8 @@ public interface BoardRepository extends JpaRepository<Board, Long>, BoardReposi
     @Query("SELECT p FROM Board p JOIN FETCH p.user")
     Page<Board> findAll(Pageable pageable);
 
-    List<Board> findAllByOrderByModifiedAtDesc();   // 수정된 날짜 기준 내림차순
-
     Optional<Board> findByIdAndUser(Long id, User user);
 
-    @Transactional
-    void deleteAllByUser(User user);    // 해당 유저가 작성한 글 모두 삭제
-    boolean existsByUser(User user);    // 해당 유저가 작성한 글 존재여부 확인
 
     // 팔로우 한 유저 글 보기 관련
     List<Board> findByUserIn(List<User> followings);
