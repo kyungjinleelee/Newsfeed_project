@@ -48,6 +48,8 @@
 게시글 조회 API 응답 시간 `53.87%` 단축, 응답 시간 격차 `59.57%` 개선
 - 부하 테스트와 리팩토링을 통한 문제 해결 [[핸들링 기록]](https://developer-jinnie.tistory.com/38)
 
+---
 
 ## 프로젝트 기록
-[[블로그 이동]](https://developer-jinnie.tistory.com/category/Project/Newsfeed)
+회고 [[게시글 이동]](https://developer-jinnie.tistory.com/46)
+전반적인 기록 [[블로그 이동]](https://developer-jinnie.tistory.com/category/Project/Newsfeed)
