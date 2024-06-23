@@ -52,4 +52,5 @@
 
 ## 프로젝트 기록
 회고 [[게시글 이동]](https://developer-jinnie.tistory.com/46)
+<br>
 전반적인 기록 [[블로그 이동]](https://developer-jinnie.tistory.com/category/Project/Newsfeed)
