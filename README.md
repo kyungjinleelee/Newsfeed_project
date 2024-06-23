@@ -39,7 +39,8 @@
 ---
 
 ## ERD 🧩
-![image](https://github.com/kyungjinleelee/Newsfeed_project/assets/105157765/d3357310-cce4-4470-a550-1f72571475a1)
+![스크린샷 2024-06-21 175424](https://github.com/kyungjinleelee/Newsfeed_project/assets/105157765/23ea098a-d742-4472-948c-cf813b0b1953)
+
 
 ---
 
